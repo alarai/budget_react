@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { ToastContainer } from "react-toastify";
+import { Switch, Route, Redirect } from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import NavBar from "./components/navBar";
+import Login from "./components/login";
+import Logout from "./components/logout";
+import Current from "./components/current";
+import History from "./components/history";
+import Graphics from "./components/graphics";
+import Recuring from "./components/recuring";
+import Categories from "./components/categories";
+import Types from "./components/types";
+import NotFound from "./components/notFound";
+
+import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
+
+class App extends Component {
+  render() {
+    return (
+      <div className="container">
+        <NavBar />
+        <ToastContainer />
+        <main role="main">
+          <Switch>
+            <Route path="/login" component={Login} />
+            <Route path="/logout" component={Logout} />
+            <Route path="/current" component={Current} />
+            <Route path="/history" component={History} />
+            <Route path="/graphics" component={Graphics} />
+            <Route path="/recuring" component={Recuring} />
+            <Route path="/categories" component={Categories} />
+            <Route path="/types" component={Types} />
+
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" exact to="/current" />
+            <Redirect to="/not-found" />
+          </Switch>
+        </main>
+      </div>
+    );
+  }
 }
 
 export default App;
