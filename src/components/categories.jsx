@@ -35,7 +35,7 @@ class Categories extends Component {
     return (
       <React.Fragment>
         <h1>Categories</h1>
-        <button className="btn btn-primary">New category</button>
+        <button className="btn btn-primary m-2">New category</button>
         <table className="table table-condensed">
           <tbody>
             {this.state.categories.map(category => (

@@ -13,3 +13,17 @@ export function getCategories() {
 export function deleteCategories(id) {
   return http.delete(getIdUrl(id));
 }
+
+export function getCategory(id) {
+  return http.get(getIdUrl(id));
+}
+
+export function saveCategory(category) {
+  if (!category.id) {
+    return http.post(apiEndpoint, category);
+  } else {
+    const body = { ...category };
+    delete body.id;
+    return http.put(getIdUrl(category.id), body);
+  }
+}
