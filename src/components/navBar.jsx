@@ -37,7 +37,7 @@ const NavBar = () => {
             </NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-item nav-link" to="/recuring">
+            <NavLink className="nav-item nav-link" to="/recurings">
               Recuring Operations
             </NavLink>
           </li>

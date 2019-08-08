@@ -42,7 +42,9 @@ class Categories extends Component {
           <tbody>
             {this.state.categories.map(category => (
               <tr key={category.id}>
-                <td>{category.name}</td>
+                <td>
+                  <Link to={"/categories/" + category.id}>{category.name}</Link>
+                </td>
                 <td className="text-right">
                   <button
                     className="btn btn-danger btn-sm"
