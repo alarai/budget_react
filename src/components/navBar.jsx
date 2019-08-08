@@ -21,8 +21,8 @@ const NavBar = () => {
 
       <div className="collapse navbar-collapse" id="navbarsExample09">
         <ul className="navbar-nav mr-auto">
-          <li className="nav-item active">
-            <NavLink className="nav-item nav-link" to="/">
+          <li className="nav-item">
+            <NavLink className="nav-item nav-link" to="/current">
               Current <span className="sr-only">(current)</span>
             </NavLink>
           </li>

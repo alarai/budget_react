@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-
 import {
   getCategories,
   deleteCategories
 } from "../services/dataSources/categoriesService";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 class Categories extends Component {
@@ -35,7 +35,9 @@ class Categories extends Component {
     return (
       <React.Fragment>
         <h1>Categories</h1>
-        <button className="btn btn-primary m-2">New category</button>
+        <Link className="btn btn-primary m-2" to="/categories/new">
+          New category
+        </Link>
         <table className="table table-condensed">
           <tbody>
             {this.state.categories.map(category => (

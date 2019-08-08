@@ -13,6 +13,7 @@ import Categories from "./components/categories";
 import Types from "./components/types";
 import NotFound from "./components/notFound";
 import CategoriesForm from "./components/forms/categoriesForm";
+import TypesForm from "./components/forms/typesForm";
 
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,6 +34,7 @@ class App extends Component {
             <Route path="/recuring" component={Recuring} />
             <Route path="/categories/:id" component={CategoriesForm} />
             <Route path="/categories" component={Categories} />
+            <Route path="/types/:id" component={TypesForm} />
             <Route path="/types" component={Types} />
 
             <Route path="/not-found" component={NotFound} />
