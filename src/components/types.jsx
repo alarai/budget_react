@@ -43,12 +43,14 @@ class Types extends Component {
                   <Link to={"/types/" + type.id}>{type.name}</Link>
                 </td>
                 <td className="text-right">
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => this.handleDelete(type)}
-                  >
-                    <i className="fa fa-trash" />
-                  </button>
+                  {type.recurings.length === 0 && type.currents.length === 0 && (
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => this.handleDelete(type)}
+                    >
+                      <i className="fa fa-trash" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

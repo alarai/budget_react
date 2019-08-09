@@ -2,17 +2,19 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi-browser";
 import {
-  getRecuring,
-  saveRecuring
-} from "./../../services/dataSources/recuringService";
+  getCurrent,
+  saveCurrent
+} from "./../../services/dataSources/currentsService";
 import { getCategories } from "../../services/dataSources/categoriesService";
 import { getTypes } from "./../../services/dataSources/typesService";
 
-class RecuringForm extends Form {
+class CurrentsForm extends Form {
   state = {
     data: {
+      date: new Date().toISOString().substring(0, 10),
       name: "",
-      value: ""
+      value: "",
+      checked: false
     },
     categories: [],
     types: [],
@@ -21,6 +23,7 @@ class RecuringForm extends Form {
 
   schemas = {
     id: [Joi.string().optional(), Joi.allow(null)],
+    date: Joi.date().required(),
     name: Joi.string()
       .required()
       .max(45)
@@ -29,21 +32,24 @@ class RecuringForm extends Form {
     typeId: Joi.string().required(),
     value: Joi.number()
       .required()
-      .label("Value")
+      .label("Value"),
+    checked: Joi.optional()
   };
 
   doSubmit = async () => {
-    await saveRecuring(this.state.data);
-    this.props.history.push("/recurings");
+    await saveCurrent(this.state.data);
+    this.props.history.push("/currents");
   };
 
-  mapToViewModel(recuring) {
+  mapToViewModel(current) {
     return {
-      name: recuring.name,
-      value: recuring.value,
-      categoryId: recuring.category.id,
-      typeId: recuring.type.id,
-      id: recuring.id
+      name: current.name,
+      value: current.value,
+      checked: current.checked,
+      id: current.id,
+      categoryId: current.category.id,
+      typeId: current.type.id,
+      date: new Date(current.date).toISOString().substring(0, 10)
     };
   }
 
@@ -57,18 +63,14 @@ class RecuringForm extends Form {
     this.setState({ types });
   }
 
-  async componentDidMount() {
-    await this.populateCategories();
-    await this.populateTypes();
+  async populateCurrent() {
     try {
-      const recuringId = this.props.match.params["id"];
+      const currentId = this.props.match.params["id"];
 
-      if (recuringId === "new") return;
+      if (currentId === "new") return;
 
-      const { data: recuring } = await getRecuring(
-        this.props.match.params["id"]
-      );
-      this.setState({ data: this.mapToViewModel(recuring) });
+      const { data: current } = await getCurrent(this.props.match.params["id"]);
+      this.setState({ data: this.mapToViewModel(current) });
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         return this.props.history.replace("/not-found");
@@ -76,11 +78,18 @@ class RecuringForm extends Form {
     }
   }
 
+  async componentDidMount() {
+    await this.populateCurrent();
+    await this.populateCategories();
+    await this.populateTypes();
+  }
+
   render() {
     return (
       <React.Fragment>
-        <h1>Recuring Form</h1>
+        <h1>Current Form</h1>
         <form onSubmit={this.handleSubmit}>
+          {this.renderDate("date", "Date")}
           {this.renderInput("name", "Name")}
           {this.renderSelect(
             "categoryId",
@@ -91,6 +100,7 @@ class RecuringForm extends Form {
           )}
           {this.renderSelect("typeId", "Type", this.state.types, "id", "name")}
           {this.renderInput("value", "Value")}
+          {this.renderCheckbox("checked", "Checked")}
           {this.renderButton("Save")}
         </form>
       </React.Fragment>
@@ -98,4 +108,4 @@ class RecuringForm extends Form {
   }
 }
 
-export default RecuringForm;
+export default CurrentsForm;

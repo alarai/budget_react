@@ -22,7 +22,7 @@ const NavBar = () => {
       <div className="collapse navbar-collapse" id="navbarsExample09">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <NavLink className="nav-item nav-link" to="/current">
+            <NavLink className="nav-item nav-link" to="/currents">
               Current <span className="sr-only">(current)</span>
             </NavLink>
           </li>

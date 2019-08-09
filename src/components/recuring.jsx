@@ -58,12 +58,14 @@ class Recuring extends Component {
                 <td>{recuring.type.name}</td>
                 <td>{recuring.value} €</td>
                 <td className="text-right">
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => this.handleDelete(recuring)}
-                  >
-                    <i className="fa fa-trash" />
-                  </button>
+                  {recuring.currents.length === 0 && (
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => this.handleDelete(recuring)}
+                    >
+                      <i className="fa fa-trash" />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

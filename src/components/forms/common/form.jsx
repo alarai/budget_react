@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
 import Select from "./select";
+import Checkbox from "./checkbox";
+import Date from "./date";
 
 class Form extends Component {
   state = { data: {}, errors: {} };
@@ -10,7 +12,7 @@ class Form extends Component {
     const option = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schemas, option);
     if (!error) return null;
-    console.log(error.details);
+
     const errors = {};
 
     error.details.map(({ message, path }) => (errors[path[0]] = message));
@@ -46,6 +48,17 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
+  handleChangeSelect = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
+    const data = { ...this.state.data };
+    data[input.name] = input.checked;
+    this.setState({ data, errors });
+  };
+
   renderButton(label) {
     return (
       <button className="btn btn-primary" disabled={this.validate()}>
@@ -64,6 +77,32 @@ class Form extends Component {
         onChange={this.handleChange}
         error={errors[name]}
         type={type}
+      />
+    );
+  }
+
+  renderDate(name, label) {
+    const { data, errors } = this.state;
+    return (
+      <Date
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  }
+
+  renderCheckbox(name, label) {
+    const { data, errors } = this.state;
+    return (
+      <Checkbox
+        name={name}
+        checked={data[name]}
+        label={label}
+        onChange={this.handleChangeSelect}
+        error={errors[name]}
       />
     );
   }

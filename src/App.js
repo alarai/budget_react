@@ -5,7 +5,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import NavBar from "./components/navBar";
 import Login from "./components/login";
 import Logout from "./components/logout";
-import Current from "./components/current";
+import Currents from "./components/currents";
 import History from "./components/history";
 import Graphics from "./components/graphics";
 import Recuring from "./components/recuring";
@@ -15,6 +15,7 @@ import NotFound from "./components/notFound";
 import CategoriesForm from "./components/forms/categoriesForm";
 import TypesForm from "./components/forms/typesForm";
 import RecuringForm from "./components/forms/recuringsForm";
+import CurrentsForm from "./components/forms/currentsForm";
 
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,7 +30,8 @@ class App extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
-            <Route path="/current" component={Current} />
+            <Route path="/currents/:id" component={CurrentsForm} />
+            <Route path="/currents" component={Currents} />
             <Route path="/history" component={History} />
             <Route path="/graphics" component={Graphics} />
             <Route path="/recurings/:id" component={RecuringForm} />

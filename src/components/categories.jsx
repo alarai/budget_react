@@ -46,12 +46,15 @@ class Categories extends Component {
                   <Link to={"/categories/" + category.id}>{category.name}</Link>
                 </td>
                 <td className="text-right">
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => this.handleDelete(category)}
-                  >
-                    <i className="fa fa-trash" />
-                  </button>
+                  {category.recurings.length === 0 &&
+                    category.currents.length === 0 && (
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => this.handleDelete(category)}
+                      >
+                        <i className="fa fa-trash" />
+                      </button>
+                    )}
                 </td>
               </tr>
             ))}
