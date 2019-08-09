@@ -79,9 +79,11 @@ class CurrentsForm extends Form {
   }
 
   async componentDidMount() {
-    await this.populateCurrent();
-    await this.populateCategories();
-    await this.populateTypes();
+    await Promise.all([
+      this.populateCurrent(),
+      this.populateCategories(),
+      this.populateTypes()
+    ]);
   }
 
   render() {

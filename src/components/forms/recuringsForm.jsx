@@ -57,9 +57,7 @@ class RecuringForm extends Form {
     this.setState({ types });
   }
 
-  async componentDidMount() {
-    await this.populateCategories();
-    await this.populateTypes();
+  async populateRecuring() {
     try {
       const recuringId = this.props.match.params["id"];
 
@@ -74,6 +72,14 @@ class RecuringForm extends Form {
         return this.props.history.replace("/not-found");
       }
     }
+  }
+
+  async componentDidMount() {
+    await Promise.all([
+      this.populateRecuring(),
+      this.populateCategories(),
+      this.populateTypes()
+    ]);
   }
 
   render() {
