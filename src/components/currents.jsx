@@ -5,15 +5,47 @@ import {
   getCurrents,
   deleteCurrents
 } from "./../services/dataSources/currentsService";
+import { getUnusedRecurings } from "./../services/dataSources/recuringService";
 
 class Currents extends Component {
   state = {
-    currents: []
+    currents: [],
+    recurings: [],
+    balanceOnAccount: 0,
+    balanceEndMonth: 0
   };
 
-  async componentDidMount() {
+  calculateBalance() {
+    let balance = 0;
+    this.state.currents.map(
+      current => (balance += current.checked ? current.value : 0)
+    );
+    return balance;
+  }
+
+  calculateBalanceEndMonth() {
+    let balance = 0;
+    this.state.currents.map(current => (balance += current.value));
+    this.state.recurings.map(recuring => (balance += recuring.value));
+    return balance;
+  }
+
+  async populateCurrents() {
     const { data: currents } = await getCurrents();
     this.setState({ currents });
+  }
+
+  async populateRecurings() {
+    const { data: recurings } = await getUnusedRecurings();
+    this.setState({ recurings });
+  }
+
+  async componentDidMount() {
+    await Promise.all([this.populateRecurings(), this.populateCurrents()]);
+
+    const balanceOnAccount = this.calculateBalance();
+    const balanceEndMonth = this.calculateBalanceEndMonth();
+    this.setState({ balanceOnAccount, balanceEndMonth });
   }
 
   async handleDelete(current) {
@@ -23,6 +55,9 @@ class Currents extends Component {
 
     try {
       await deleteCurrents(current.id);
+      const balanceOnAccount = this.calculateBalance();
+      const balanceEndMonth = this.calculateBalanceEndMonth();
+      this.setState({ balanceOnAccount, balanceEndMonth });
     } catch (error) {
       if (error.response && error.response.status === 404)
         toast.error("The current has already been removed");
@@ -38,6 +73,29 @@ class Currents extends Component {
         <Link className="btn btn-primary m-2" to="/currents/new">
           New Current
         </Link>
+        Or
+        <select>
+          <option>Add recuring ({this.state.recurings.length})</option>
+          {this.state.recurings.map(recuring => (
+            <option key={recuring.id} value={recuring.id}>
+              {recuring.name} {recuring.value} €
+            </option>
+          ))}
+        </select>
+        <div className="row">
+          <div className="card col-5">
+            <div className="card-body">
+              <h5 className="card-tile">Current Balance</h5>
+              <p>{this.state.balanceOnAccount} €</p>
+            </div>
+          </div>
+          <div className="card offset-2 col-5">
+            <div className="card-body">
+              <h5 className="card-tile">Current Planned End Month</h5>
+              <p>{this.state.balanceEndMonth} €</p>
+            </div>
+          </div>
+        </div>
         <table className="table table-condensed">
           <thead>
             <tr>

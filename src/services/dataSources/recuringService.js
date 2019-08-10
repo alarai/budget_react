@@ -10,6 +10,10 @@ export function getRecurings() {
   return http.get(apiEndpoint);
 }
 
+export function getUnusedRecurings() {
+  return http.get(apiEndpoint + "unused");
+}
+
 export function deleteRecurings(id) {
   return http.delete(getIdUrl(id));
 }

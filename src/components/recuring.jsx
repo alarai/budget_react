@@ -8,18 +8,20 @@ import {
 
 class Recuring extends Component {
   state = {
-    recurings: []
+    recurings: [],
+    balance: 0
   };
 
   async componentDidMount() {
     const { data: recurings } = await getRecurings();
-    this.setState({ recurings });
+    this.setState({ recurings, balance: this.calculateBalance(recurings) });
   }
 
   async handleDelete(recuring) {
     const beforeDeleteRecurings = this.state.recurings;
     const recurings = beforeDeleteRecurings.filter(c => c.id !== recuring.id);
-    this.setState({ recurings });
+    const balance = this.calculateBalance(recurings);
+    this.setState({ recurings, balance });
 
     try {
       await deleteRecurings(recuring.id);
@@ -27,8 +29,17 @@ class Recuring extends Component {
       if (error.response && error.response.status === 404)
         toast.error("The recuring has already been removed");
 
-      this.setState({ recurings: beforeDeleteRecurings });
+      this.setState({
+        recurings: beforeDeleteRecurings,
+        balance: this.calculateBalance(beforeDeleteRecurings)
+      });
     }
+  }
+
+  calculateBalance(recurings) {
+    let balance = 0;
+    recurings.map(recuring => (balance += recuring.value));
+    return balance;
   }
 
   render() {
@@ -38,6 +49,12 @@ class Recuring extends Component {
         <Link className="btn btn-primary m-2" to="/recurings/new">
           New recuring
         </Link>
+        <div className="card col-3">
+          <div className="card-body">
+            <h5 className="card-tile">Recurings Balance</h5>
+            <p>{this.state.balance} €</p>
+          </div>
+        </div>
         <table className="table table-condensed">
           <thead>
             <tr>
@@ -49,26 +66,30 @@ class Recuring extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.recurings.map(recuring => (
-              <tr key={recuring.id}>
-                <td>
-                  <Link to={"/recurings/" + recuring.id}>{recuring.name}</Link>
-                </td>
-                <td>{recuring.category.name}</td>
-                <td>{recuring.type.name}</td>
-                <td>{recuring.value} €</td>
-                <td className="text-right">
-                  {recuring.currents.length === 0 && (
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => this.handleDelete(recuring)}
-                    >
-                      <i className="fa fa-trash" />
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {this.state.recurings.map(recuring => {
+              return (
+                <tr key={recuring.id}>
+                  <td>
+                    <Link to={"/recurings/" + recuring.id}>
+                      {recuring.name}
+                    </Link>
+                  </td>
+                  <td>{recuring.category.name}</td>
+                  <td>{recuring.type.name}</td>
+                  <td>{recuring.value} €</td>
+                  <td className="text-right">
+                    {recuring.currents.length === 0 && (
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => this.handleDelete(recuring)}
+                      >
+                        <i className="fa fa-trash" />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </React.Fragment>
