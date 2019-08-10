@@ -12,7 +12,9 @@ class RecuringForm extends Form {
   state = {
     data: {
       name: "",
-      value: ""
+      value: "",
+      typeId: "",
+      categoryId: ""
     },
     categories: [],
     types: [],
@@ -20,13 +22,17 @@ class RecuringForm extends Form {
   };
 
   schemas = {
-    id: [Joi.string().optional(), Joi.allow(null)],
+    id: Joi.optional(),
     name: Joi.string()
       .required()
       .max(45)
       .label("Name"),
-    categoryId: Joi.string().required(),
-    typeId: Joi.string().required(),
+    categoryId: Joi.number()
+      .required()
+      .label("Category"),
+    typeId: Joi.number()
+      .required()
+      .label("Type"),
     value: Joi.number()
       .required()
       .label("Value")
@@ -88,14 +94,8 @@ class RecuringForm extends Form {
         <h1>Recuring Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Name")}
-          {this.renderSelect(
-            "categoryId",
-            "Category",
-            this.state.categories,
-            "id",
-            "name"
-          )}
-          {this.renderSelect("typeId", "Type", this.state.types, "id", "name")}
+          {this.renderSelect("categoryId", "Category", this.state.categories)}
+          {this.renderSelect("typeId", "Type", this.state.types)}
           {this.renderInput("value", "Value")}
           {this.renderButton("Save")}
         </form>

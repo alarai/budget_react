@@ -28,8 +28,8 @@ class CurrentsForm extends Form {
       .required()
       .max(45)
       .label("Name"),
-    categoryId: Joi.string().required(),
-    typeId: Joi.string().required(),
+    categoryId: Joi.number().required(),
+    typeId: Joi.number().required(),
     value: Joi.number()
       .required()
       .label("Value"),
@@ -84,6 +84,7 @@ class CurrentsForm extends Form {
       this.populateCategories(),
       this.populateTypes()
     ]);
+    console.log(this.state);
   }
 
   render() {
@@ -91,7 +92,7 @@ class CurrentsForm extends Form {
       <React.Fragment>
         <h1>Current Form</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderDate("date", "Date")}
+          {this.renderInput("date", "Date", "date")}
           {this.renderInput("name", "Name")}
           {this.renderSelect(
             "categoryId",

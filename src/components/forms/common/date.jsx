@@ -7,7 +7,7 @@ const Date = ({ name, label, error, value, ...rest }) => {
       <input
         {...rest}
         type="date"
-        defaultValue={value}
+        value={value}
         name={name}
         id={name}
         className="form-control"

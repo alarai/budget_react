@@ -42,7 +42,7 @@ class App extends Component {
             <Route path="/types" component={Types} />
 
             <Route path="/not-found" component={NotFound} />
-            <Redirect from="/" exact to="/current" />
+            <Redirect from="/" exact to="/currents" />
             <Redirect to="/not-found" />
           </Switch>
         </main>
