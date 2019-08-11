@@ -6,10 +6,15 @@ import {
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import CategoriesTable from "./tables/categoriesTable";
+import _ from "lodash";
 
 class Categories extends Component {
   state = {
-    categories: []
+    categories: [],
+    sortColumn: {
+      path: "name",
+      order: "asc"
+    }
   };
 
   async componentDidMount() {
@@ -32,7 +37,13 @@ class Categories extends Component {
     }
   }
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   render() {
+    const { categories, sortColumn } = this.state;
+    const sorted = _.orderBy(categories, [sortColumn.path], [sortColumn.order]);
     return (
       <React.Fragment>
         <h1>Categories</h1>
@@ -40,8 +51,10 @@ class Categories extends Component {
           New category
         </Link>
         <CategoriesTable
-          categories={this.state.categories}
+          categories={sorted}
           onDelete={this.handleDelete.bind(this)}
+          onSort={this.handleSort}
+          sortColumn={sortColumn}
         />
       </React.Fragment>
     );

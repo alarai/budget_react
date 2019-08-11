@@ -3,10 +3,15 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { getTypes, deleteTypes } from "../services/dataSources/typesService";
 import TypesTable from "./tables/typesTable";
+import _ from "lodash";
 
 class Types extends Component {
   state = {
-    types: []
+    types: [],
+    sortColumn: {
+      path: "name",
+      order: "asc"
+    }
   };
 
   async componentDidMount() {
@@ -29,7 +34,13 @@ class Types extends Component {
     }
   }
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   render() {
+    const { types, sortColumn } = this.state;
+    const sorted = _.orderBy(types, [sortColumn.path], [sortColumn.order]);
     return (
       <React.Fragment>
         <h1>Types</h1>
@@ -37,8 +48,10 @@ class Types extends Component {
           New type
         </Link>
         <TypesTable
-          categories={this.state.types}
+          categories={sorted}
           onDelete={this.handleDelete.bind(this)}
+          onSort={this.handleSort}
+          sortColumn={sortColumn}
         />
       </React.Fragment>
     );

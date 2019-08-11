@@ -10,6 +10,7 @@ import { getUnusedRecurings } from "./../services/dataSources/recuringService";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import CurrentsTable from "./tables/currentsTable";
+import _ from "lodash";
 
 class Currents extends Component {
   state = {
@@ -18,6 +19,10 @@ class Currents extends Component {
     balanceOnAccount: 0,
     balanceEndMonth: 0,
     recuringValue: "",
+    sortColumn: {
+      path: "date",
+      order: "desc"
+    },
     chartsOptions: {
       chart: {
         plotBackgroundColor: null,
@@ -172,7 +177,14 @@ class Currents extends Component {
     this.setState({ recuringValue: currentTarget.value });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   render() {
+    const { currents, sortColumn } = this.state;
+    const sorted = _.orderBy(currents, [sortColumn.path], [sortColumn.order]);
+
     return (
       <React.Fragment>
         <h1>Currents</h1>
@@ -235,8 +247,10 @@ class Currents extends Component {
         </div>
         <div className="row">
           <CurrentsTable
-            currents={this.state.currents}
+            currents={sorted}
             onDelete={this.handleDelete.bind(this)}
+            onSort={this.handleSort}
+            sortColumn={sortColumn}
           />
         </div>
       </React.Fragment>

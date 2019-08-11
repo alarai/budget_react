@@ -3,29 +3,34 @@ import Table from "./common/table";
 
 class CurrentsTable extends Component {
   columns = [
-    { label: "date", path: "date" },
-    { label: "Name", path: "name" },
+    { label: "date", path: "date", sortable: true },
+    { label: "Name", path: "name", sortable: true },
     {
       label: "Category",
       key: "category",
+      path: "category.name",
       content: current => {
         return current.category.name;
-      }
+      },
+      sortable: true
     },
     {
       label: "Type",
       key: "type",
+      path: "type.name",
       content: current => {
         return current.type.name;
-      }
+      },
+      sortable: true
     },
-    { label: "Value", path: "value" },
+    { label: "Value", path: "value", sortable: true },
     {
       label: "Checked",
       key: "checked",
       content: current => {
         return current.checked ? "Y" : "N";
-      }
+      },
+      sortable: true
     },
     {
       key: "delete",
@@ -43,8 +48,15 @@ class CurrentsTable extends Component {
   ];
 
   render() {
-    const { currents } = this.props;
-    return <Table columns={this.columns} data={currents} />;
+    const { currents, onSort, sortColumn } = this.props;
+    return (
+      <Table
+        columns={this.columns}
+        data={currents}
+        onSort={onSort}
+        sortColumn={sortColumn}
+      />
+    );
   }
 }
 

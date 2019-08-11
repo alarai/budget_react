@@ -3,22 +3,26 @@ import Table from "./common/table";
 
 class RecuringTable extends Component {
   columns = [
-    { label: "Name", path: "name" },
+    { label: "Name", path: "name", sortable: true },
     {
       label: "Category",
       key: "category",
+      path: "category.name",
       content: recuring => {
         return recuring.category.name;
-      }
+      },
+      sortable: true
     },
     {
       label: "Type",
       key: "type",
+      path: "type.name",
       content: recuring => {
         return recuring.type.name;
-      }
+      },
+      sortable: true
     },
-    { label: "Value", path: "value" },
+    { label: "Value", path: "value", sortable: true },
     {
       key: "delete",
       content: recuring => {
@@ -38,8 +42,15 @@ class RecuringTable extends Component {
   handleNone() {}
 
   render() {
-    const { recurings } = this.props;
-    return <Table columns={this.columns} data={recurings} />;
+    const { recurings, onSort, sortColumn } = this.props;
+    return (
+      <Table
+        columns={this.columns}
+        data={recurings}
+        onSort={onSort}
+        sortColumn={sortColumn}
+      />
+    );
   }
 }
 

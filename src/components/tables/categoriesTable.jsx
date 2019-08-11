@@ -3,7 +3,7 @@ import Table from "./common/table";
 
 class CategoriesTable extends Component {
   columns = [
-    { label: "Name", path: "name" },
+    { label: "Name", path: "name", sortable: true },
     {
       key: "delete",
       content: category => {
@@ -18,13 +18,21 @@ class CategoriesTable extends Component {
             <i className="fa fa-trash" />
           </button>
         );
-      }
+      },
+      sortable: false
     }
   ];
 
   render() {
-    const { categories } = this.props;
-    return <Table columns={this.columns} data={categories} />;
+    const { categories, onSort, sortColumn } = this.props;
+    return (
+      <Table
+        columns={this.columns}
+        data={categories}
+        onSort={onSort}
+        sortColumn={sortColumn}
+      />
+    );
   }
 }
 

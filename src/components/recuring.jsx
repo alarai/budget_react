@@ -6,11 +6,16 @@ import {
   deleteRecurings
 } from "./../services/dataSources/recuringService";
 import RecuringTable from "./tables/recuringTable";
+import _ from "lodash";
 
 class Recuring extends Component {
   state = {
     recurings: [],
-    balance: 0
+    balance: 0,
+    sortColumn: {
+      path: "name",
+      order: "asc"
+    }
   };
 
   async componentDidMount() {
@@ -43,7 +48,14 @@ class Recuring extends Component {
     return balance;
   }
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   render() {
+    const { recurings, sortColumn } = this.state;
+    const sorted = _.orderBy(recurings, [sortColumn.path], [sortColumn.order]);
+
     return (
       <React.Fragment>
         <h1>Recurings</h1>
@@ -57,8 +69,10 @@ class Recuring extends Component {
           </div>
         </div>
         <RecuringTable
-          recurings={this.state.recurings}
+          recurings={sorted}
           onDelete={this.handleDelete.bind(this)}
+          onSort={this.handleSort}
+          sortColumn={sortColumn}
         />
       </React.Fragment>
     );
