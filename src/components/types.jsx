@@ -19,7 +19,7 @@ class Types extends Component {
     this.setState({ types });
   }
 
-  async handleDelete(type) {
+  handleDelete = async type => {
     const beforeDeleteTypes = this.state.types;
     const types = beforeDeleteTypes.filter(c => c.id !== type.id);
     this.setState({ types });
@@ -32,7 +32,7 @@ class Types extends Component {
 
       this.setState({ types: beforeDeleteTypes });
     }
-  }
+  };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
@@ -49,7 +49,7 @@ class Types extends Component {
         </Link>
         <TypesTable
           categories={sorted}
-          onDelete={this.handleDelete.bind(this)}
+          onDelete={this.handleDelete}
           onSort={this.handleSort}
           sortColumn={sortColumn}
         />

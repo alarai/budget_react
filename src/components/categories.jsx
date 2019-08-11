@@ -22,7 +22,7 @@ class Categories extends Component {
     this.setState({ categories });
   }
 
-  async handleDelete(category) {
+  handleDelete = async category => {
     const beforeDeleteCategories = this.state.categories;
     const categories = beforeDeleteCategories.filter(c => c.id !== category.id);
     this.setState({ categories });
@@ -35,7 +35,7 @@ class Categories extends Component {
 
       this.setState({ categories: beforeDeleteCategories });
     }
-  }
+  };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
@@ -52,7 +52,7 @@ class Categories extends Component {
         </Link>
         <CategoriesTable
           categories={sorted}
-          onDelete={this.handleDelete.bind(this)}
+          onDelete={this.handleDelete}
           onSort={this.handleSort}
           sortColumn={sortColumn}
         />

@@ -23,7 +23,7 @@ class Recuring extends Component {
     this.setState({ recurings, balance: this.calculateBalance(recurings) });
   }
 
-  async handleDelete(recuring) {
+  handleDelete = async recuring => {
     const beforeDeleteRecurings = this.state.recurings;
     const recurings = beforeDeleteRecurings.filter(c => c.id !== recuring.id);
     const balance = this.calculateBalance(recurings);
@@ -40,7 +40,7 @@ class Recuring extends Component {
         balance: this.calculateBalance(beforeDeleteRecurings)
       });
     }
-  }
+  };
 
   calculateBalance(recurings) {
     let balance = 0;
@@ -70,7 +70,7 @@ class Recuring extends Component {
         </div>
         <RecuringTable
           recurings={sorted}
-          onDelete={this.handleDelete.bind(this)}
+          onDelete={this.handleDelete}
           onSort={this.handleSort}
           sortColumn={sortColumn}
         />

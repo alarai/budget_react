@@ -137,12 +137,14 @@ class Currents extends Component {
     this.reload();
   }
 
-  async handleDelete(current) {
+  handleDelete = async current => {
     const beforeDeleteCurrents = this.state.currents;
     const currents = beforeDeleteCurrents.filter(c => c.id !== current.id);
 
     const recurings = [...this.state.recurings];
-    recurings.push(current.recuring);
+    if (current.recuring) {
+      recurings.push(current.recuring);
+    }
 
     this.setState({ currents, recurings });
 
@@ -158,7 +160,7 @@ class Currents extends Component {
 
       this.setState({ currents: beforeDeleteCurrents });
     }
-  }
+  };
 
   handleAddRecuring = async e => {
     e.preventDefault();
@@ -248,7 +250,7 @@ class Currents extends Component {
         <div className="row">
           <CurrentsTable
             currents={sorted}
-            onDelete={this.handleDelete.bind(this)}
+            onDelete={this.handleDelete}
             onSort={this.handleSort}
             sortColumn={sortColumn}
           />
