@@ -27,3 +27,7 @@ export function saveCurrent(current) {
     return http.put(getIdUrl(current.id), body);
   }
 }
+
+export function addRecuring(recuringId) {
+  return http.get(apiEndpoint + "/addrecur/" + recuringId);
+}
