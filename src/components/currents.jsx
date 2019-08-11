@@ -7,6 +7,8 @@ import {
   addRecuring
 } from "./../services/dataSources/currentsService";
 import { getUnusedRecurings } from "./../services/dataSources/recuringService";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 class Currents extends Component {
   state = {
@@ -14,8 +16,82 @@ class Currents extends Component {
     recurings: [],
     balanceOnAccount: 0,
     balanceEndMonth: 0,
-    recuringValue: ""
+    recuringValue: "",
+    chartsOptions: {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: "pie"
+      },
+      title: {
+        text: "Répartition"
+      },
+      tooltip: {
+        pointFormat:
+          "{series.name}: <b>{point.y:.2f} ({point.percentage:.1f}%)</b>"
+      },
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          dataLabels: {
+            enabled: true,
+            format: "<b>{point.name}</b>: {point.percentage:.1f} %",
+            style: {
+              color:
+                (Highcharts.theme && Highcharts.theme.contrastTextColor) ||
+                "black"
+            }
+          }
+        }
+      },
+      series: [
+        {
+          id: "expenses",
+          name: "Dépenses",
+          animation: false,
+          colorByPoint: true,
+          data: []
+        }
+      ]
+    }
   };
+
+  makeSeriesChart() {
+    let expensesByCategories = [];
+    const negatives = this.state.currents.filter(c => c.value < 0);
+    negatives.map(
+      current =>
+        (expensesByCategories[current.category.name] = {
+          y: expensesByCategories[current.category.name]
+            ? expensesByCategories[current.category.name].y +
+              Math.abs(current.value)
+            : Math.abs(current.value),
+
+          name: current.category.name
+        })
+    );
+    let data = [];
+    for (let expense in expensesByCategories) {
+      data.push({ y: expensesByCategories[expense].y, name: expense });
+    }
+    const chartsOptions = { ...this.state.chartsOptions };
+    chartsOptions.series[0].data = expensesByCategories;
+    this.setState({
+      chartsOptions: {
+        series: [
+          {
+            id: "expenses",
+            name: "Dépenses",
+            animation: false,
+            colorByPoint: true,
+            data: data
+          }
+        ]
+      }
+    });
+  }
 
   calculateBalance() {
     let balance = 0;
@@ -48,6 +124,7 @@ class Currents extends Component {
     const balanceOnAccount = this.calculateBalance();
     const balanceEndMonth = this.calculateBalanceEndMonth();
     this.setState({ balanceOnAccount, balanceEndMonth, recuringValue: "" });
+    this.makeSeriesChart();
   }
 
   componentDidMount() {
@@ -68,6 +145,7 @@ class Currents extends Component {
       const balanceOnAccount = this.calculateBalance();
       const balanceEndMonth = this.calculateBalanceEndMonth();
       this.setState({ balanceOnAccount, balanceEndMonth });
+      this.makeSeriesChart();
     } catch (error) {
       if (error.response && error.response.status === 404)
         toast.error("The current has already been removed");
@@ -97,6 +175,10 @@ class Currents extends Component {
     return (
       <React.Fragment>
         <h1>Currents</h1>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={this.state.chartsOptions}
+        />
         <div className="row">
           <form className="form-inline">
             <Link className="btn btn-primary m-2" to="/currents/new">
@@ -140,13 +222,13 @@ class Currents extends Component {
           <div className="card col-5">
             <div className="card-body">
               <h5 className="card-tile">Current Balance</h5>
-              <p>{this.state.balanceOnAccount} €</p>
+              <p>{this.state.balanceOnAccount.toFixed(2)} €</p>
             </div>
           </div>
           <div className="card offset-2 col-5">
             <div className="card-body">
               <h5 className="card-tile">Current Planned End Month</h5>
-              <p>{this.state.balanceEndMonth} €</p>
+              <p>{this.state.balanceEndMonth.toFixed(2)} €</p>
             </div>
           </div>
         </div>
