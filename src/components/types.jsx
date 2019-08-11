@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { getTypes, deleteTypes } from "../services/dataSources/typesService";
+import TypesTable from "./tables/typesTable";
 
 class Types extends Component {
   state = {
@@ -35,27 +36,10 @@ class Types extends Component {
         <Link className="btn btn-primary m-2" to="/types/new">
           New type
         </Link>
-        <table className="table table-condensed">
-          <tbody>
-            {this.state.types.map(type => (
-              <tr key={type.id}>
-                <td>
-                  <Link to={"/types/" + type.id}>{type.name}</Link>
-                </td>
-                <td className="text-right">
-                  {type.recurings.length === 0 && type.currents.length === 0 && (
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => this.handleDelete(type)}
-                    >
-                      <i className="fa fa-trash" />
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <TypesTable
+          categories={this.state.types}
+          onDelete={this.handleDelete.bind(this)}
+        />
       </React.Fragment>
     );
   }

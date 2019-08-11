@@ -5,6 +5,7 @@ import {
   getRecurings,
   deleteRecurings
 } from "./../services/dataSources/recuringService";
+import RecuringTable from "./tables/recuringTable";
 
 class Recuring extends Component {
   state = {
@@ -55,43 +56,10 @@ class Recuring extends Component {
             <p>{this.state.balance} €</p>
           </div>
         </div>
-        <table className="table table-condensed">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Type</th>
-              <th>Value</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.recurings.map(recuring => {
-              return (
-                <tr key={recuring.id}>
-                  <td>
-                    <Link to={"/recurings/" + recuring.id}>
-                      {recuring.name}
-                    </Link>
-                  </td>
-                  <td>{recuring.category.name}</td>
-                  <td>{recuring.type.name}</td>
-                  <td>{recuring.value} €</td>
-                  <td className="text-right">
-                    {recuring.currents.length === 0 && (
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => this.handleDelete(recuring)}
-                      >
-                        <i className="fa fa-trash" />
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <RecuringTable
+          recurings={this.state.recurings}
+          onDelete={this.handleDelete.bind(this)}
+        />
       </React.Fragment>
     );
   }

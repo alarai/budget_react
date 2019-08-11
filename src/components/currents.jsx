@@ -9,6 +9,7 @@ import {
 import { getUnusedRecurings } from "./../services/dataSources/recuringService";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import CurrentsTable from "./tables/currentsTable";
 
 class Currents extends Component {
   state = {
@@ -233,48 +234,10 @@ class Currents extends Component {
           </div>
         </div>
         <div className="row">
-          <table className="table table-condensed">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Type</th>
-                <th>Value</th>
-                <th />
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.currents.map(current => (
-                <tr key={current.id}>
-                  <td>
-                    {new Intl.DateTimeFormat("fr-FR", {
-                      year: "numeric",
-                      month: "long",
-                      day: "2-digit"
-                    }).format(new Date(current.date))}
-                  </td>
-                  <td>
-                    <Link to={"/currents/" + current.id}>{current.name}</Link>
-                  </td>
-
-                  <td>{current.category.name}</td>
-                  <td>{current.type.name}</td>
-                  <td>{current.value} €</td>
-                  <td>{current.checked ? "Oui" : "Non"}</td>
-                  <td className="text-right">
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => this.handleDelete(current)}
-                    >
-                      <i className="fa fa-trash" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <CurrentsTable
+            currents={this.state.currents}
+            onDelete={this.handleDelete.bind(this)}
+          />
         </div>
       </React.Fragment>
     );

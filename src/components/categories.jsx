@@ -5,6 +5,7 @@ import {
 } from "../services/dataSources/categoriesService";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import CategoriesTable from "./tables/categoriesTable";
 
 class Categories extends Component {
   state = {
@@ -38,28 +39,10 @@ class Categories extends Component {
         <Link className="btn btn-primary m-2" to="/categories/new">
           New category
         </Link>
-        <table className="table table-condensed">
-          <tbody>
-            {this.state.categories.map(category => (
-              <tr key={category.id}>
-                <td>
-                  <Link to={"/categories/" + category.id}>{category.name}</Link>
-                </td>
-                <td className="text-right">
-                  {category.recurings.length === 0 &&
-                    category.currents.length === 0 && (
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => this.handleDelete(category)}
-                      >
-                        <i className="fa fa-trash" />
-                      </button>
-                    )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CategoriesTable
+          categories={this.state.categories}
+          onDelete={this.handleDelete.bind(this)}
+        />
       </React.Fragment>
     );
   }
