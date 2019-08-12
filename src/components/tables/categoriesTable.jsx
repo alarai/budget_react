@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 import Table from "./common/table";
+import { Link } from "react-router-dom";
 
 class CategoriesTable extends Component {
   columns = [
-    { label: "Name", path: "name", sortable: true },
+    {
+      label: "Name",
+      path: "name",
+      sortable: true,
+      content: category => {
+        return <Link to={"categories/" + category.id}>{category.name}</Link>;
+      }
+    },
     {
       key: "delete",
       content: category => {

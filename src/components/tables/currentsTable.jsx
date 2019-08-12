@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import Table from "./common/table";
+import { Link } from "react-router-dom";
 
 class CurrentsTable extends Component {
   columns = [
     { label: "date", path: "date", sortable: true },
-    { label: "Name", path: "name", sortable: true },
+    {
+      label: "Name",
+      path: "name",
+      sortable: true,
+      content: current => {
+        return <Link to={"currents/" + current.id}>{current.name}</Link>;
+      }
+    },
     {
       label: "Category",
       key: "category",

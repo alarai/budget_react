@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 import Table from "./common/table";
+import { Link } from "react-router-dom";
 
 class RecuringTable extends Component {
   columns = [
-    { label: "Name", path: "name", sortable: true },
+    {
+      label: "Name",
+      path: "name",
+      sortable: true,
+      content: recuring => {
+        return <Link to={"recurings/" + recuring.id}>{recuring.name}</Link>;
+      }
+    },
     {
       label: "Category",
       key: "category",

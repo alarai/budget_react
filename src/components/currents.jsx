@@ -7,10 +7,10 @@ import {
   addRecuring
 } from "./../services/dataSources/currentsService";
 import { getUnusedRecurings } from "./../services/dataSources/recuringService";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+
 import CurrentsTable from "./tables/currentsTable";
 import _ from "lodash";
+import PieChart from "./graphics/pieChart";
 
 class Currents extends Component {
   state = {
@@ -23,45 +23,7 @@ class Currents extends Component {
       path: "date",
       order: "desc"
     },
-    chartsOptions: {
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: "pie"
-      },
-      title: {
-        text: "Répartition"
-      },
-      tooltip: {
-        pointFormat:
-          "{series.name}: <b>{point.y:.2f} ({point.percentage:.1f}%)</b>"
-      },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: "pointer",
-          dataLabels: {
-            enabled: true,
-            format: "<b>{point.name}</b>: {point.percentage:.1f} %",
-            style: {
-              color:
-                (Highcharts.theme && Highcharts.theme.contrastTextColor) ||
-                "black"
-            }
-          }
-        }
-      },
-      series: [
-        {
-          id: "expenses",
-          name: "Dépenses",
-          animation: false,
-          colorByPoint: true,
-          data: []
-        }
-      ]
-    }
+    chartData: []
   };
 
   makeSeriesChart() {
@@ -82,21 +44,7 @@ class Currents extends Component {
     for (let expense in expensesByCategories) {
       data.push({ y: expensesByCategories[expense].y, name: expense });
     }
-    const chartsOptions = { ...this.state.chartsOptions };
-    chartsOptions.series[0].data = expensesByCategories;
-    this.setState({
-      chartsOptions: {
-        series: [
-          {
-            id: "expenses",
-            name: "Dépenses",
-            animation: false,
-            colorByPoint: true,
-            data: data
-          }
-        ]
-      }
-    });
+    this.setState({ chartData: data });
   }
 
   calculateBalance() {
@@ -190,10 +138,7 @@ class Currents extends Component {
     return (
       <React.Fragment>
         <h1>Currents</h1>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={this.state.chartsOptions}
-        />
+        <PieChart chartData={this.state.chartData} />
         <div className="row">
           <form className="form-inline">
             <Link className="btn btn-primary m-2" to="/currents/new">
