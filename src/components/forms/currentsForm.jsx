@@ -84,7 +84,6 @@ class CurrentsForm extends Form {
       this.populateCategories(),
       this.populateTypes()
     ]);
-    console.log(this.state);
   }
 
   render() {

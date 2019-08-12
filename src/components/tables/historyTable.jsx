@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Table from "./common/table";
-import { Link } from "react-router-dom";
 
 class HistoryTable extends Component {
   columns = [
@@ -34,7 +33,6 @@ class HistoryTable extends Component {
 
   render() {
     const { history, onSort, sortColumn } = this.props;
-    console.log(this.props);
     return (
       <Table
         columns={this.columns}
