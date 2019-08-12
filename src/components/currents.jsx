@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import {
   getCurrents,
   deleteCurrents,
-  addRecuring
+  addRecuring,
+  checkCurrent
 } from "./../services/dataSources/currentsService";
 import { getUnusedRecurings } from "./../services/dataSources/recuringService";
 
@@ -110,6 +111,31 @@ class Currents extends Component {
     }
   };
 
+  handleChecked = async current => {
+    const beforeUpdateCurrents = this.state.currents;
+    const beforeUpdateBalance = this.state.balanceOnAccount;
+
+    const currents = [...this.state.currents];
+    const index = currents.indexOf(current);
+    currents[index] = { ...current };
+    currents[index].checked = !currents[index].checked;
+    await this.setState({ currents });
+    const balanceOnAccount = this.calculateBalance();
+    this.setState({ balanceOnAccount });
+
+    try {
+      await checkCurrent(current.id);
+    } catch (error) {
+      if (error.response && error.response.status === 404)
+        toast.error("The current does not exists anymore");
+
+      this.setState({
+        currents: beforeUpdateCurrents,
+        balanceOnAccount: beforeUpdateBalance
+      });
+    }
+  };
+
   handleAddRecuring = async e => {
     e.preventDefault();
 
@@ -198,6 +224,7 @@ class Currents extends Component {
             onDelete={this.handleDelete}
             onSort={this.handleSort}
             sortColumn={sortColumn}
+            onChecked={this.handleChecked}
           />
         </div>
       </React.Fragment>

@@ -31,3 +31,7 @@ export function saveCurrent(current) {
 export function addRecuring(recuringId) {
   return http.get(apiEndpoint + "/addrecur/" + recuringId);
 }
+
+export function checkCurrent(id) {
+  return http.get(apiEndpoint + "/check/" + id);
+}

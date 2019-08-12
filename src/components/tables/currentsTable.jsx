@@ -33,23 +33,27 @@ class CurrentsTable extends Component {
     },
     { label: "Value", path: "value", sortable: true },
     {
-      label: "Checked",
-      key: "checked",
+      key: "operations",
       content: current => {
-        return current.checked ? "Y" : "N";
-      },
-      sortable: true
-    },
-    {
-      key: "delete",
-      content: current => {
+        const buttonCheckClass =
+          "btn btn-sm mr-2 " + (current.checked ? "btn-success" : "btn-danger");
+        const buttonCheckIcon =
+          "fa fa-fw " + (current.checked ? "fa-check" : "fa-times");
         return (
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => this.props.onDelete(current)}
-          >
-            <i className="fa fa-trash" />
-          </button>
+          <React.Fragment>
+            <button
+              className={buttonCheckClass}
+              onClick={() => this.props.onChecked(current)}
+            >
+              <i className={buttonCheckIcon} />
+            </button>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => this.props.onDelete(current)}
+            >
+              <i className="fa fa-trash fa-fw" />
+            </button>
+          </React.Fragment>
         );
       }
     }
