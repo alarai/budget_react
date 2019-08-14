@@ -115,9 +115,16 @@ class History extends Component {
   };
 
   render() {
-    const { history, sortColumn } = this.state;
+    const { history, sortColumn, periods } = this.state;
     const sorted = _.orderBy(history, [sortColumn.path], [sortColumn.order]);
-
+    if (periods.length === 0) {
+      return (
+        <React.Fragment>
+          <h1>History</h1>
+          <p>No history is yet available!</p>
+        </React.Fragment>
+      );
+    }
     return (
       <React.Fragment>
         <h1>History</h1>

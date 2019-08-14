@@ -81,6 +81,14 @@ class Graphics extends Component {
   }
 
   render() {
+    if (this.state.periods.length === 0) {
+      return (
+        <React.Fragment>
+          <h1>Graphics</h1>
+          <p>No data is yet available!</p>
+        </React.Fragment>
+      );
+    }
     return (
       <React.Fragment>
         <h1>Graphics</h1>

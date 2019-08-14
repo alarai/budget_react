@@ -40,32 +40,26 @@ const NavBar = ({ user }) => {
               </NavLink>
             </li>
             <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                id="dropdown08"
+              <div
+                className="nav-link dropdown-toggle clickable"
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
               >
                 Parameters
-              </a>
+              </div>
               <div className="dropdown-menu" aria-labelledby="dropdown08">
-                <li className="nav-item">
-                  <NavLink className="dropdown-item" to="/recurings">
-                    Recuring Operations
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="dropdown-item" to="/categories">
-                    Operation Categories
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="dropdown-item" to="/types">
-                    Operation Types
-                  </NavLink>
-                </li>
+                <NavLink className="dropdown-item" to="/recurings">
+                  Recuring Operations
+                </NavLink>
+
+                <NavLink className="dropdown-item" to="/categories">
+                  Operation Categories
+                </NavLink>
+
+                <NavLink className="dropdown-item" to="/types">
+                  Operation Types
+                </NavLink>
               </div>
             </li>
 

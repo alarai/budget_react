@@ -164,7 +164,9 @@ class Currents extends Component {
     return (
       <React.Fragment>
         <h1>Currents</h1>
-        <PieChart chartData={this.state.chartData} />
+        {this.state.currents.length > 0 && (
+          <PieChart chartData={this.state.chartData} />
+        )}
         <div className="row">
           <form className="form-inline">
             <Link className="btn btn-primary m-2" to="/currents/new">
@@ -199,6 +201,7 @@ class Currents extends Component {
             <button
               className="btn btn-primary ml-2"
               onClick={this.handleHistorize}
+              disabled={this.state.currents.length === 0}
             >
               Historize
             </button>
