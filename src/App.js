@@ -16,6 +16,7 @@ import TypesForm from "./components/forms/typesForm";
 import RecuringForm from "./components/forms/recuringsForm";
 import CurrentsForm from "./components/forms/currentsForm";
 import LoginForm from "./components/forms/loginForm";
+import HistorizeForm from "./components/forms/historizeForm";
 import ProtectedRoute from "./components/router/protectedRoute";
 import auth from "./services/authService";
 
@@ -52,6 +53,7 @@ class App extends Component {
             <ProtectedRoute path="/categories" component={Categories} />
             <ProtectedRoute path="/types/:id" component={TypesForm} />
             <ProtectedRoute path="/types" component={Types} />
+            <ProtectedRoute path="/historize" component={HistorizeForm} />
 
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/currents" />

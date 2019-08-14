@@ -144,11 +144,6 @@ class Currents extends Component {
     this.reload();
   };
 
-  handleHistorize = e => {
-    e.preventDefault();
-    console.log("historize");
-  };
-
   handleSelectChange = ({ currentTarget }) => {
     this.setState({ recuringValue: currentTarget.value });
   };
@@ -160,7 +155,7 @@ class Currents extends Component {
   render() {
     const { currents, sortColumn } = this.state;
     const sorted = _.orderBy(currents, [sortColumn.path], [sortColumn.order]);
-
+    console.log(currents.filter(c => c.checked).length);
     return (
       <React.Fragment>
         <h1>Currents</h1>
@@ -197,14 +192,14 @@ class Currents extends Component {
             >
               Add
             </button>
-            Or
-            <button
-              className="btn btn-primary ml-2"
-              onClick={this.handleHistorize}
-              disabled={this.state.currents.length === 0}
-            >
-              Historize
-            </button>
+            {currents.filter(c => c.checked).length > 0 && (
+              <React.Fragment>
+                Or
+                <Link className="btn btn-primary ml-2" to="/historize">
+                  Historize
+                </Link>
+              </React.Fragment>
+            )}
           </form>
         </div>
         <div className="row">

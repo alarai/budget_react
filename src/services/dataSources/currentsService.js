@@ -35,3 +35,7 @@ export function addRecuring(recuringId) {
 export function checkCurrent(id) {
   return http.get(apiEndpoint + "/check/" + id);
 }
+
+export function historize(period) {
+  return http.post(apiEndpoint + "/historize", period);
+}
