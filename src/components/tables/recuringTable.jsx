@@ -43,7 +43,9 @@ class RecuringTable extends Component {
             <i className="fa fa-trash" />
           </button>
         );
-      }
+      },
+      bodyClass: "text-right",
+      headerClass: "text-right"
     }
   ];
 

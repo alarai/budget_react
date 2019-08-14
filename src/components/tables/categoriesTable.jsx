@@ -27,7 +27,9 @@ class CategoriesTable extends Component {
           </button>
         );
       },
-      sortable: false
+      sortable: false,
+      bodyClass: "text-right",
+      headerClass: "text-right"
     }
   ];
 

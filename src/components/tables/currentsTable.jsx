@@ -55,7 +55,9 @@ class CurrentsTable extends Component {
             </button>
           </React.Fragment>
         );
-      }
+      },
+      bodyClass: "text-right",
+      headerClass: "text-right"
     }
   ];
 

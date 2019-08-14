@@ -13,6 +13,7 @@ class TypesTable extends CategoriesTable {
       }
     },
     {
+      label: "Actions",
       key: "delete",
       content: type => {
         return (
@@ -25,7 +26,9 @@ class TypesTable extends CategoriesTable {
           </button>
         );
       },
-      sortable: false
+      sortable: false,
+      bodyClass: "text-right",
+      headerClass: "text-right"
     }
   ];
 }
