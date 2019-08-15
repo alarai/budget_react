@@ -20,7 +20,9 @@ class CurrentsTable extends Component {
       content: current => {
         return current.category.name;
       },
-      sortable: true
+      sortable: true,
+      bodyClass: "d-none d-sm-table-cell",
+      headerClass: "d-none d-sm-table-cell"
     },
     {
       label: "Type",
@@ -29,14 +31,17 @@ class CurrentsTable extends Component {
       content: current => {
         return current.type.name;
       },
-      sortable: true
+      sortable: true,
+      bodyClass: "d-none d-sm-table-cell",
+      headerClass: "d-none d-sm-table-cell"
     },
     { label: "Value", path: "value", sortable: true },
     {
       key: "operations",
       content: current => {
         const buttonCheckClass =
-          "btn btn-sm mr-2 " + (current.checked ? "btn-success" : "btn-danger");
+          "d-none d-sm-inline btn btn-sm mr-2 " +
+          (current.checked ? "btn-success" : "btn-danger");
         const buttonCheckIcon =
           "fa fa-fw " + (current.checked ? "fa-check" : "fa-times");
         return (

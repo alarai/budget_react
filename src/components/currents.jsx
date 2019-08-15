@@ -199,13 +199,13 @@ class Currents extends Component {
           </form>
         </div>
         <div className="row">
-          <div className="card col-5">
+          <div className="card col-12 col-sm-12 col-md-6 col-lg-5">
             <div className="card-body">
               <h5 className="card-tile">Current Balance</h5>
               <p>{balanceOnAccount.toFixed(2)} €</p>
             </div>
           </div>
-          <div className="card offset-2 col-5">
+          <div className="card col-12 col-sm-12 col-md-6 offset-lg-2 col-lg-5">
             <div className="card-body">
               <h5 className="card-tile">Current Planned End Month</h5>
               <p>{balanceEndMonth.toFixed(2)} €</p>

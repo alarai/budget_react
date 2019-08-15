@@ -62,7 +62,7 @@ class Recuring extends Component {
         <Link className="btn btn-primary m-2" to="/recurings/new">
           New recuring
         </Link>
-        <div className="card col-3">
+        <div className="card col-12 col-sm-12 col-md-6 col-lg-4">
           <div className="card-body">
             <h5 className="card-tile">Recurings Balance</h5>
             <p>{balance} €</p>

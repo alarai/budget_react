@@ -19,10 +19,7 @@ const NavBar = ({ user }) => {
         <span className="navbar-toggler-icon" />
       </button>
       {user && (
-        <div
-          className="collapse navbar-collapse justify-content-md-center"
-          id="navbar"
-        >
+        <div className="collapse navbar-collapse" id="navbar">
           <ul className="navbar-nav">
             <li className="nav-item">
               <NavLink className="nav-item nav-link" to="/currents">
@@ -48,7 +45,7 @@ const NavBar = ({ user }) => {
               >
                 Parameters
               </div>
-              <div className="dropdown-menu" aria-labelledby="dropdown08">
+              <div className="dropdown-menu" aria-labelledby="dropdown">
                 <NavLink className="dropdown-item" to="/recurings">
                   Recuring Operations
                 </NavLink>
