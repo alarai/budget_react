@@ -7,6 +7,7 @@ import {
 import HistoryTable from "./tables/historyTable";
 import _ from "lodash";
 import PieChart from "./graphics/pieChart";
+import PeriodSelector from "./periodSelector";
 
 class History extends Component {
   state = {
@@ -21,11 +22,9 @@ class History extends Component {
     selectedPeriodIndex: 0
   };
 
-  makeSeriesChart() {
+  makeSeriesChart(history) {
     let expensesByCategories = [];
-    const negatives = this.state.history.filter(
-      c => c.value < 0 && !c.was_recuring
-    );
+    const negatives = history.filter(c => c.value < 0 && !c.was_recuring);
     negatives.map(
       item =>
         (expensesByCategories[item.category_name] = {
@@ -40,7 +39,7 @@ class History extends Component {
     for (let expense in expensesByCategories) {
       data.push({ y: expensesByCategories[expense].y, name: expense });
     }
-    this.setState({ chartData: data });
+    return data;
   }
 
   makePeriodsItems = periodsRaw => {
@@ -55,21 +54,20 @@ class History extends Component {
     return periods;
   };
 
-  async makeHistory() {
-    const { periods, selectedPeriodIndex } = this.state;
-    const { data: history } = await getHistory(
-      periods[selectedPeriodIndex].year,
-      periods[selectedPeriodIndex].month
-    );
-    this.setState({ history });
-    this.makeSeriesChart();
+  async makeHistory(year, month) {
+    const { data: history } = await getHistory(year, month);
+    this.setState({ history, chartData: this.makeSeriesChart(history) });
   }
 
   async componentDidMount() {
     const { data: periodsRaw } = await getHistoryPeriods();
-    this.setState({ periods: this.makePeriodsItems(periodsRaw) });
+    const periodItems = this.makePeriodsItems(periodsRaw);
     if (periodsRaw.length > 0) {
-      await this.makeHistory();
+      this.setState({
+        periods: periodItems,
+        selectedPeriod: periodItems[0].periodString
+      });
+      this.makeHistory(periodItems[0].year, periodItems[0].month);
     }
   }
 
@@ -78,44 +76,61 @@ class History extends Component {
   };
 
   getIndexPeriod = periodString => {
-    for (let i = 0; i < this.state.periods.length; i++) {
-      if (this.state.periods[i].periodString === periodString) {
+    const { periods } = this.state;
+    for (let i = 0; i < periods.length; i++) {
+      if (periods[i].periodString === periodString) {
         return i;
       }
     }
     return null;
   };
 
-  handlePeriodChange = async ({ currentTarget }) => {
-    await this.setState({
-      selectedPeriod: currentTarget.value,
-      selectedPeriodIndex: this.getIndexPeriod(currentTarget.value)
+  doPeriodChange(periodString) {
+    const { periods } = this.state;
+    const selectedPeriod = periodString;
+    const selectedPeriodIndex = this.getIndexPeriod(selectedPeriod);
+    this.setState({
+      selectedPeriod,
+      selectedPeriodIndex
     });
-    this.makeHistory();
+    this.makeHistory(
+      periods[selectedPeriodIndex].year,
+      periods[selectedPeriodIndex].month
+    );
+  }
+
+  handlePeriodChange = ({ currentTarget }) => {
+    this.doPeriodChange(currentTarget.value);
+  };
+
+  handlePeriodMove = async increment => {
+    const selectedPeriodIndex = this.state.selectedPeriodIndex + increment;
+    const selectedPeriod = this.state.periods[selectedPeriodIndex];
+
+    await this.setState({
+      selectedPeriod: selectedPeriod.periodString,
+      selectedPeriodIndex: selectedPeriodIndex
+    });
+    this.makeHistory(selectedPeriod.year, selectedPeriod.month);
   };
 
   handlePrevPeriod = async () => {
-    const newPeriod = this.state.selectedPeriodIndex + 1;
-
-    await this.setState({
-      selectedPeriod: this.state.periods[newPeriod].periodString,
-      selectedPeriodIndex: newPeriod
-    });
-    this.makeHistory();
+    this.handlePeriodMove(1);
   };
 
   handleNextPeriod = async () => {
-    const newPeriod = this.state.selectedPeriodIndex - 1;
-
-    await this.setState({
-      selectedPeriod: this.state.periods[newPeriod].periodString,
-      selectedPeriodIndex: newPeriod
-    });
-    this.makeHistory();
+    this.handlePeriodMove(-1);
   };
 
   render() {
-    const { history, sortColumn, periods } = this.state;
+    const {
+      history,
+      sortColumn,
+      periods,
+      selectedPeriod,
+      selectedPeriodIndex,
+      chartData
+    } = this.state;
     const sorted = _.orderBy(history, [sortColumn.path], [sortColumn.order]);
     if (periods.length === 0) {
       return (
@@ -128,46 +143,15 @@ class History extends Component {
     return (
       <React.Fragment>
         <h1>History</h1>
-        <div className="row form-inline">
-          <div className="col-2">
-            <button
-              id="btnNextPeriod"
-              className="btn btn-primary"
-              onClick={this.handlePrevPeriod}
-              disabled={
-                this.state.selectedPeriodIndex === this.state.periods.length - 1
-              }
-            >
-              &lt;&lt;
-            </button>
-          </div>
-          <div className="col-8 text-center">
-            <select
-              className="form-control"
-              value={this.state.selectedPeriod}
-              onChange={this.handlePeriodChange}
-            >
-              {this.state.periods.map(({ periodString }) => {
-                return (
-                  <option key={periodString} value={periodString}>
-                    {periodString}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="col-2 text-right">
-            <button
-              id="btnPrevPeriod"
-              className="btn btn-primary"
-              onClick={this.handleNextPeriod}
-              disabled={this.state.selectedPeriodIndex === 0}
-            >
-              &gt;&gt;
-            </button>
-          </div>
-        </div>
-        <PieChart chartData={this.state.chartData} />
+        <PeriodSelector
+          periods={periods}
+          selectedPeriod={selectedPeriod}
+          selectedPeriodIndex={selectedPeriodIndex}
+          onButtonChange={this.handlePeriodMove}
+          onSelectChange={this.handlePeriodChange}
+          periodValue="periodString"
+        />
+        <PieChart chartData={chartData} />
         <div className="row">
           <HistoryTable
             history={sorted}

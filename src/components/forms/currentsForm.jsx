@@ -87,6 +87,7 @@ class CurrentsForm extends Form {
   }
 
   render() {
+    const { categories, types } = this.state;
     return (
       <React.Fragment>
         <h1>Current Form</h1>
@@ -96,11 +97,11 @@ class CurrentsForm extends Form {
           {this.renderSelect(
             "categoryId",
             "Category",
-            this.state.categories,
+            categories,
             "id",
             "name"
           )}
-          {this.renderSelect("typeId", "Type", this.state.types, "id", "name")}
+          {this.renderSelect("typeId", "Type", types, "id", "name")}
           {this.renderInput("value", "Value")}
           {this.renderCheckbox("checked", "Checked")}
           {this.renderButton("Save")}

@@ -28,13 +28,13 @@ import HighchartsReact from "highcharts-react-official";
   };
 })(Highcharts);
 
-const HistoChart = ({ chartDataX, chartDataY }) => {
+const HistoChart = ({ chartDataX, chartDataY, serieName, title }) => {
   const chartsOptions = {
     chart: {
       type: "column"
     },
     title: {
-      text: "Balance mensuelle"
+      text: title
     },
     tooltip: {
       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
@@ -56,7 +56,7 @@ const HistoChart = ({ chartDataX, chartDataY }) => {
     },
     series: [
       {
-        name: "Balance",
+        name: serieName,
         data: chartDataY
       }
     ]

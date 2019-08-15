@@ -2,7 +2,7 @@ import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-const PieChart = ({ chartData }) => {
+const PieChart = ({ chartData, serieName, title }) => {
   const chartsOptions = {
     chart: {
       plotBackgroundColor: null,
@@ -11,7 +11,7 @@ const PieChart = ({ chartData }) => {
       type: "pie"
     },
     title: {
-      text: "Répartition"
+      text: title
     },
     tooltip: {
       pointFormat:
@@ -35,7 +35,7 @@ const PieChart = ({ chartData }) => {
     series: [
       {
         id: "expenses",
-        name: "Dépenses",
+        name: serieName,
         animation: false,
         colorByPoint: true,
         data: chartData

@@ -27,8 +27,17 @@ class App extends Component {
   state = {};
 
   componentDidMount() {
-    const user = auth.getCurrentUser();
-    this.setState({ user });
+    let user = auth.getCurrentUser();
+    const curTimeStamp = Math.round(+new Date() / 1000);
+    if (user && user.exp > curTimeStamp) {
+      this.setState({ user });
+    } else {
+      if (user) {
+        //token expired we logouut locally
+        auth.logout();
+        window.location = "/";
+      }
+    }
   }
 
   render() {

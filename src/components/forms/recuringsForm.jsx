@@ -89,13 +89,14 @@ class RecuringForm extends Form {
   }
 
   render() {
+    const { categories, types } = this.state;
     return (
       <React.Fragment>
         <h1>Recuring Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Name")}
-          {this.renderSelect("categoryId", "Category", this.state.categories)}
-          {this.renderSelect("typeId", "Type", this.state.types)}
+          {this.renderSelect("categoryId", "Category", categories)}
+          {this.renderSelect("typeId", "Type", types)}
           {this.renderInput("value", "Value")}
           {this.renderButton("Save")}
         </form>

@@ -4,6 +4,7 @@ import {
   getHistoryByYear
 } from "./../services/dataSources/historyService";
 import HistoChart from "./graphics/histoChart";
+import PeriodSelector from "./periodSelector";
 
 class Graphics extends Component {
   state = {
@@ -15,8 +16,9 @@ class Graphics extends Component {
   };
 
   getIndexPeriod = periodString => {
-    for (let i = 0; i < this.state.periods.length; i++) {
-      if (this.state.periods[i].year.toString() === periodString) {
+    const { periods } = this.state;
+    for (let i = 0; i < periods.length; i++) {
+      if (periods[i].year.toString() === periodString) {
         return i;
       }
     }
@@ -33,55 +35,65 @@ class Graphics extends Component {
       return null;
     });
 
-    this.setState({ chartDataX, chartDataY });
+    return { chartDataX, chartDataY };
   }
 
-  async makeHistory() {
-    const { periods, selectedPeriodIndex } = this.state;
-    const { data: history } = await getHistoryByYear(
-      periods[selectedPeriodIndex].year
+  async makeHistory(year) {
+    const { data: history } = await getHistoryByYear(year);
+    const chartData = this.makeSeriesChart(history);
+    this.setState({
+      history,
+      chartDataX: chartData.chartDataX,
+      chartDataY: chartData.chartDataY
+    });
+  }
+
+  doPeriodChange(periodString) {
+    const { periods } = this.state;
+    const selectedPeriod = periodString;
+    const selectedPeriodIndex = this.getIndexPeriod(selectedPeriod);
+    this.setState({
+      selectedPeriod,
+      selectedPeriodIndex
+    });
+    this.makeHistory(
+      periods[selectedPeriodIndex].year,
+      periods[selectedPeriodIndex].month
     );
-    this.makeSeriesChart(history);
   }
 
   handlePeriodChange = async ({ currentTarget }) => {
-    await this.setState({
-      selectedPeriod: currentTarget.value,
-      selectedPeriodIndex: this.getIndexPeriod(currentTarget.value)
-    });
-    this.makeHistory();
+    this.doPeriodChange(currentTarget.value);
   };
 
-  handlePrevPeriod = async () => {
-    const newPeriod = this.state.selectedPeriodIndex + 1;
+  handlePeriodMove = async increment => {
+    const selectedPeriodIndex = this.state.selectedPeriodIndex + increment;
+    const selectedPeriod = this.state.periods[selectedPeriodIndex];
 
     await this.setState({
-      selectedPeriod: this.state.periods[newPeriod].year,
-      selectedPeriodIndex: newPeriod
+      selectedPeriod: selectedPeriod.year,
+      selectedPeriodIndex: selectedPeriodIndex
     });
-    this.makeHistory();
-  };
-
-  handleNextPeriod = async () => {
-    const newPeriod = this.state.selectedPeriodIndex - 1;
-
-    await this.setState({
-      selectedPeriod: this.state.periods[newPeriod].year,
-      selectedPeriodIndex: newPeriod
-    });
-    this.makeHistory();
+    this.makeHistory(selectedPeriod.year);
   };
 
   async componentDidMount() {
     const { data: periods } = await getHistoryYears();
-    this.setState({ periods });
     if (periods.length > 0) {
-      await this.makeHistory();
+      this.setState({ periods, selectedPeriod: periods[0].year });
+      await this.makeHistory(periods[0].year);
     }
   }
 
   render() {
-    if (this.state.periods.length === 0) {
+    const {
+      periods,
+      selectedPeriod,
+      selectedPeriodIndex,
+      chartDataX,
+      chartDataY
+    } = this.state;
+    if (periods.length === 0) {
       return (
         <React.Fragment>
           <h1>Graphics</h1>
@@ -92,49 +104,15 @@ class Graphics extends Component {
     return (
       <React.Fragment>
         <h1>Graphics</h1>
-        <div className="row form-inline">
-          <div className="col-2">
-            <button
-              id="btnNextPeriod"
-              className="btn btn-primary"
-              onClick={this.handlePrevPeriod}
-              disabled={
-                this.state.selectedPeriodIndex === this.state.periods.length - 1
-              }
-            >
-              &lt;&lt;
-            </button>
-          </div>
-          <div className="col-8 text-center">
-            <select
-              className="form-control"
-              value={this.state.selectedPeriod}
-              onChange={this.handlePeriodChange}
-            >
-              {this.state.periods.map(({ year }) => {
-                return (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="col-2 text-right">
-            <button
-              id="btnPrevPeriod"
-              className="btn btn-primary"
-              onClick={this.handleNextPeriod}
-              disabled={this.state.selectedPeriodIndex === 0}
-            >
-              &gt;&gt;
-            </button>
-          </div>
-        </div>
-        <HistoChart
-          chartDataX={this.state.chartDataX}
-          chartDataY={this.state.chartDataY}
+        <PeriodSelector
+          periods={periods}
+          selectedPeriod={selectedPeriod}
+          selectedPeriodIndex={selectedPeriodIndex}
+          onButtonChange={this.handlePeriodMove}
+          onSelectChange={this.handlePeriodChange}
+          periodValue="year"
         />
+        <HistoChart chartDataX={chartDataX} chartDataY={chartDataY} />
       </React.Fragment>
     );
   }

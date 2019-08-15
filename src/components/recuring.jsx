@@ -53,7 +53,7 @@ class Recuring extends Component {
   };
 
   render() {
-    const { recurings, sortColumn } = this.state;
+    const { recurings, sortColumn, balance } = this.state;
     const sorted = _.orderBy(recurings, [sortColumn.path], [sortColumn.order]);
 
     return (
@@ -65,7 +65,7 @@ class Recuring extends Component {
         <div className="card col-3">
           <div className="card-body">
             <h5 className="card-tile">Recurings Balance</h5>
-            <p>{this.state.balance} €</p>
+            <p>{balance} €</p>
           </div>
         </div>
         <RecuringTable

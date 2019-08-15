@@ -27,9 +27,9 @@ class Currents extends Component {
     chartData: []
   };
 
-  makeSeriesChart() {
+  makeSeriesChart(currents) {
     let expensesByCategories = [];
-    const negatives = this.state.currents.filter(c => c.value < 0);
+    const negatives = currents.filter(c => c.value < 0);
     negatives.map(
       current =>
         (expensesByCategories[current.category.name] = {
@@ -45,41 +45,42 @@ class Currents extends Component {
     for (let expense in expensesByCategories) {
       data.push({ y: expensesByCategories[expense].y, name: expense });
     }
-    this.setState({ chartData: data });
+
+    return data;
   }
 
-  calculateBalance() {
+  calculateBalance(currents) {
     let balance = 0;
-    this.state.currents.map(
-      current => (balance += current.checked ? current.value : 0)
-    );
+    currents.map(current => (balance += current.checked ? current.value : 0));
     return balance;
   }
 
-  calculateBalanceEndMonth() {
+  calculateBalanceEndMonth(currents, recurings) {
     let balance = 0;
-    this.state.currents.map(current => (balance += current.value));
-    this.state.recurings.map(recuring => (balance += recuring.value));
+    currents.map(current => (balance += current.value));
+    recurings.map(recuring => (balance += recuring.value));
     return balance;
   }
 
-  async populateCurrents() {
-    const { data: currents } = await getCurrents();
-    this.setState({ currents });
-  }
+  buildUpdate(currents, recurings) {
+    const balanceOnAccount = this.calculateBalance(currents);
+    const balanceEndMonth = this.calculateBalanceEndMonth(currents, recurings);
+    const chartData = this.makeSeriesChart(currents);
 
-  async populateRecurings() {
-    const { data: recurings } = await getUnusedRecurings();
-    this.setState({ recurings });
+    return {
+      currents,
+      recurings,
+      chartData,
+      balanceOnAccount,
+      balanceEndMonth
+    };
   }
 
   async reload() {
-    await Promise.all([this.populateRecurings(), this.populateCurrents()]);
+    const { data: currents } = await getCurrents();
+    const { data: recurings } = await getUnusedRecurings();
 
-    const balanceOnAccount = this.calculateBalance();
-    const balanceEndMonth = this.calculateBalanceEndMonth();
-    this.setState({ balanceOnAccount, balanceEndMonth, recuringValue: "" });
-    this.makeSeriesChart();
+    this.setState(this.buildUpdate(currents, recurings));
   }
 
   componentDidMount() {
@@ -87,41 +88,35 @@ class Currents extends Component {
   }
 
   handleDelete = async current => {
-    const beforeDeleteCurrents = this.state.currents;
-    const currents = beforeDeleteCurrents.filter(c => c.id !== current.id);
+    const previousState = this.state;
+    const currents = previousState.currents.filter(c => c.id !== current.id);
 
     const recurings = [...this.state.recurings];
     if (current.recuring) {
       recurings.push(current.recuring);
     }
 
-    this.setState({ currents, recurings });
+    this.setState(this.buildUpdate(currents, recurings));
 
     try {
       await deleteCurrents(current.id);
-      const balanceOnAccount = this.calculateBalance();
-      const balanceEndMonth = this.calculateBalanceEndMonth();
-      this.setState({ balanceOnAccount, balanceEndMonth });
-      this.makeSeriesChart();
     } catch (error) {
       if (error.response && error.response.status === 404)
         toast.error("The current has already been removed");
 
-      this.setState({ currents: beforeDeleteCurrents });
+      this.setState(previousState);
     }
   };
 
   handleChecked = async current => {
-    const beforeUpdateCurrents = this.state.currents;
-    const beforeUpdateBalance = this.state.balanceOnAccount;
+    const previousState = this.state;
 
-    const currents = [...this.state.currents];
+    const currents = [...previousState.currents];
     const index = currents.indexOf(current);
     currents[index] = { ...current };
     currents[index].checked = !currents[index].checked;
-    await this.setState({ currents });
-    const balanceOnAccount = this.calculateBalance();
-    this.setState({ balanceOnAccount });
+
+    this.setState(this.buildUpdate(currents, previousState.recurings));
 
     try {
       await checkCurrent(current.id);
@@ -129,10 +124,7 @@ class Currents extends Component {
       if (error.response && error.response.status === 404)
         toast.error("The current does not exists anymore");
 
-      this.setState({
-        currents: beforeUpdateCurrents,
-        balanceOnAccount: beforeUpdateBalance
-      });
+      this.setState(previousState);
     }
   };
 
@@ -153,15 +145,21 @@ class Currents extends Component {
   };
 
   render() {
-    const { currents, sortColumn } = this.state;
+    const {
+      currents,
+      sortColumn,
+      recurings,
+      chartData,
+      recuringValue,
+      balanceEndMonth,
+      balanceOnAccount
+    } = this.state;
     const sorted = _.orderBy(currents, [sortColumn.path], [sortColumn.order]);
-    console.log(currents.filter(c => c.checked).length);
+
     return (
       <React.Fragment>
         <h1>Currents</h1>
-        {this.state.currents.length > 0 && (
-          <PieChart chartData={this.state.chartData} />
-        )}
+        {currents.length > 0 && <PieChart chartData={chartData} />}
         <div className="row">
           <form className="form-inline">
             <Link className="btn btn-primary m-2" to="/currents/new">
@@ -172,12 +170,10 @@ class Currents extends Component {
               <select
                 className="form-control ml-2"
                 onChange={this.handleSelectChange}
-                value={this.state.recuringValue}
+                value={recuringValue}
               >
-                <option value="">
-                  Add recuring ({this.state.recurings.length})
-                </option>
-                {this.state.recurings.map(recuring => (
+                <option value="">Add recuring ({recurings.length})</option>
+                {recurings.map(recuring => (
                   <option key={recuring.id} value={recuring.id}>
                     {recuring.category.name} {recuring.name} ({recuring.value}{" "}
                     €)
@@ -187,7 +183,7 @@ class Currents extends Component {
             </div>
             <button
               className="btn btn-primary ml-2 mr-2"
-              disabled={this.state.recuringValue === ""}
+              disabled={recuringValue === ""}
               onClick={this.handleAddRecuring}
             >
               Add
@@ -206,13 +202,13 @@ class Currents extends Component {
           <div className="card col-5">
             <div className="card-body">
               <h5 className="card-tile">Current Balance</h5>
-              <p>{this.state.balanceOnAccount.toFixed(2)} €</p>
+              <p>{balanceOnAccount.toFixed(2)} €</p>
             </div>
           </div>
           <div className="card offset-2 col-5">
             <div className="card-body">
               <h5 className="card-tile">Current Planned End Month</h5>
-              <p>{this.state.balanceEndMonth.toFixed(2)} €</p>
+              <p>{balanceEndMonth.toFixed(2)} €</p>
             </div>
           </div>
         </div>
