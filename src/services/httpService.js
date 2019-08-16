@@ -18,6 +18,10 @@ axios.interceptors.response.use(null, error => {
   return Promise.reject(error);
 });
 
+function setRequestInterceptor(interceptorBefore, interceptorAfter) {
+  axios.interceptors.request.use(interceptorBefore, interceptorAfter);
+}
+
 function setJwt(jwt) {
   axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
 }
@@ -27,5 +31,6 @@ export default {
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
-  setJwt
+  setJwt,
+  setRequestInterceptor
 };
