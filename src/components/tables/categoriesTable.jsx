@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 class CategoriesTable extends Component {
   columns = [
     {
+      key: "default",
+      content: type => {
+        return type.use_for_history && <i className="fa fa-bookmark" />;
+      },
+      bodyClass: "smallColumn",
+      headerClass: "smallColumn"
+    },
+    {
       label: "Name",
       path: "name",
       sortable: true,

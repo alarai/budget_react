@@ -2,6 +2,7 @@ import React from "react";
 import Form from "./common/form";
 import Joi from "joi-browser";
 import { historize } from "./../../services/dataSources/currentsService";
+import { toast } from "react-toastify";
 
 class HistorizeForm extends Form {
   state = {
@@ -37,8 +38,12 @@ class HistorizeForm extends Form {
   }
 
   doSubmit = async () => {
-    await historize(this.state.data);
-    this.props.history.push("/currents");
+    try {
+      await historize(this.state.data);
+      this.props.history.push("/currents");
+    } catch (error) {
+      if (error.response) toast.error(error.response.data);
+    }
   };
 
   render() {

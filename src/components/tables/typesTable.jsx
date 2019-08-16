@@ -5,6 +5,14 @@ import { Link } from "react-router-dom";
 class TypesTable extends CategoriesTable {
   columns = [
     {
+      key: "default",
+      content: type => {
+        return type.use_for_history && <i className="fa fa-bookmark" />;
+      },
+      bodyClass: "smallColumn",
+      headerClass: "smallColumn"
+    },
+    {
       label: "Name",
       path: "name",
       sortable: true,
@@ -14,16 +22,20 @@ class TypesTable extends CategoriesTable {
     },
     {
       label: "Actions",
-      key: "delete",
+      key: "actions",
       content: type => {
         return (
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={() => this.props.onDelete(type)}
-            disabled={type.recurings.length !== 0 || type.currents.length !== 0}
-          >
-            <i className="fa fa-trash" />
-          </button>
+          <React.Fragment>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => this.props.onDelete(type)}
+              disabled={
+                type.recurings.length !== 0 || type.currents.length !== 0
+              }
+            >
+              <i className="fa fa-trash" />
+            </button>
+          </React.Fragment>
         );
       },
       sortable: false,

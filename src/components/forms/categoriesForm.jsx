@@ -32,6 +32,7 @@ class CategoriesForm extends Form {
   mapToViewModel(category) {
     return {
       name: category.name,
+      use_for_history: category.use_for_history,
       id: category.id
     };
   }
