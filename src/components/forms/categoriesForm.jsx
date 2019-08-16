@@ -9,7 +9,8 @@ import {
 class CategoriesForm extends Form {
   state = {
     data: {
-      name: ""
+      name: "",
+      use_for_history: false
     },
     errors: {}
   };
@@ -19,7 +20,8 @@ class CategoriesForm extends Form {
     name: Joi.string()
       .required()
       .max(45)
-      .label("Name")
+      .label("Name"),
+    use_for_history: Joi.optional()
   };
 
   doSubmit = async () => {
@@ -57,6 +59,7 @@ class CategoriesForm extends Form {
         <h1>Categories Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Name")}
+          {this.renderCheckbox("use_for_history", "Use for History")}
           {this.renderButton("Save")}
         </form>
       </React.Fragment>

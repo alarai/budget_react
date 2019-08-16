@@ -6,7 +6,8 @@ import { getType, saveType } from "./../../services/dataSources/typesService";
 class TypesForm extends Form {
   state = {
     data: {
-      name: ""
+      name: "",
+      use_for_history: false
     },
     errors: {}
   };
@@ -16,7 +17,8 @@ class TypesForm extends Form {
     name: Joi.string()
       .required()
       .max(45)
-      .label("Name")
+      .label("Name"),
+    use_for_history: Joi.optional()
   };
 
   doSubmit = async () => {
@@ -27,6 +29,7 @@ class TypesForm extends Form {
   mapToViewModel(type) {
     return {
       name: type.name,
+      use_for_history: type.use_for_history,
       id: type.id
     };
   }
@@ -52,6 +55,7 @@ class TypesForm extends Form {
         <h1>Type Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Name")}
+          {this.renderCheckbox("use_for_history", "Use for History")}
           {this.renderButton("Save")}
         </form>
       </React.Fragment>
