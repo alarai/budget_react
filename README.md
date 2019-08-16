@@ -1,68 +1,22 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# DISCLAIMER
 
-## Available Scripts
+This project is a first on my own project after following some online courses about web developement in the process of acquiring new skills. This project is composed of two parts today. A back end developed with Symfony 4 to build an API, and a React fron-end to consume and use this API.
 
-In the project directory, you can run:
+The basic idea was to refresh a very old application I did for my personal use to follow my budget monthly and keep track of operations I knew but was not on my account yet, or that would come monthly but have not yet arrived on the real account. All of this to get at any point in time a knowledge of what's really remaining on my account, and also the most important, how much money would remain at the end of the month.
 
-### `npm start`
+It is not a immensely complex application, but I did my best to make it a good application. And that I'll try to keep updating in the future. If you got on my Github following an application to a position for your company, do not hestitate to contact me by email or phone so I can provide you access to an actual functioning live version of the tool.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+I do not presume this to be the perfect code, but to be good enough to show my quick adaptability to new technologies. As I'm sure I would learn even more things inside a real team in the future.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+# Front End
 
-### `npm test`
+This Front End version is developed using the latest React version at this time (16.9). It also makes uses of the following additional libraries :
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- react-router-dom
+- react-toastify
+- axios
+- bootstrap
+- font-awesome
+- highcharts
+- lodash
+- jwt-decode
