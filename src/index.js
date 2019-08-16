@@ -11,7 +11,7 @@ import "bootstrap/dist/js/bootstrap.js";
 import "font-awesome/css/font-awesome.css";
 
 ReactDOM.render(
-  <BrowserRouter basename={"/budgetreact"}>
+  <BrowserRouter>
     <App />
   </BrowserRouter>,
   document.getElementById("root")
