@@ -39,8 +39,7 @@ class App extends Component {
   axiosRequestInterceptorBefore = config => {
     const { user } = this.state;
     if (user && this.sessionExpired(user)) {
-      auth.logout();
-      window.location = "/";
+      auth.logout("Your session has expired");
       return false;
     }
     return config;
@@ -54,7 +53,6 @@ class App extends Component {
       if (user) {
         //token expired we logouut locally
         auth.logout();
-        window.location = "/";
       }
     } else {
       this.setState({ user });

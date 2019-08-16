@@ -19,6 +19,13 @@ class LoginForm extends Form {
       .label("Password")
   };
 
+  componentDidMount() {
+    const message = auth.getLogoutMessage();
+    if (message) {
+      this.setState({ errors: { username: message } });
+    }
+  }
+
   doSubmit = async () => {
     try {
       const { data } = this.state;

@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 
 const apiEndpoint = "/auth";
 const tokenKey = "token";
+const logoutMessageKey = "logoutMessage";
 
 http.setJwt(getJwt());
 
@@ -16,8 +17,12 @@ export function loginWithJwt(jwt) {
   localStorage.setItem(tokenKey, jwt);
 }
 
-export function logout() {
+export function logout(message) {
+  if (message) {
+    localStorage.setItem(logoutMessageKey, message);
+  }
   localStorage.removeItem(tokenKey);
+  window.location = "/";
 }
 
 export function getCurrentUser() {
@@ -29,6 +34,14 @@ export function getCurrentUser() {
   }
 }
 
+export function getLogoutMessage() {
+  const message = localStorage.getItem(logoutMessageKey);
+  if (message) {
+    localStorage.removeItem(logoutMessageKey);
+  }
+  return message;
+}
+
 export function getJwt() {
   return localStorage.getItem(tokenKey);
 }
@@ -38,5 +51,6 @@ export default {
   loginWithJwt,
   logout,
   getCurrentUser,
-  getJwt
+  getJwt,
+  getLogoutMessage
 };
