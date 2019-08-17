@@ -65,7 +65,7 @@ class Recuring extends Component {
         <div className="card col-12 col-sm-12 col-md-6 col-lg-4">
           <div className="card-body">
             <h5 className="card-tile">Recurings Balance</h5>
-            <p>{balance} €</p>
+            <p>{balance.toFixed(2)} €</p>
           </div>
         </div>
         <RecuringTable

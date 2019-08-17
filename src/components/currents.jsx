@@ -158,8 +158,10 @@ class Currents extends Component {
 
     return (
       <React.Fragment>
-        <h1>Currents</h1>
-        {currents.length > 0 && <PieChart chartData={chartData} />}
+        <h1>Current Expenses</h1>
+        {chartData.length > 0 && (
+          <PieChart chartData={chartData} title="Expenses by Categories" />
+        )}
         <div className="row">
           <form className="form-inline">
             <Link className="btn btn-primary m-2" to="/currents/new">

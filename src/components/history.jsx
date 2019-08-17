@@ -151,7 +151,7 @@ class History extends Component {
           onSelectChange={this.handlePeriodChange}
           periodValue="periodString"
         />
-        <PieChart chartData={chartData} />
+        <PieChart chartData={chartData} title="Expenses by Categories" />
         <div className="row">
           <HistoryTable
             history={sorted}
