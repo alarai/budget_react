@@ -15,19 +15,13 @@ class RecuringTable extends Component {
     {
       label: "Category",
       key: "category",
-      path: "category.name",
-      content: recuring => {
-        return recuring.category.name;
-      },
+      path: "categoryName",
       sortable: true
     },
     {
       label: "Type",
       key: "type",
-      path: "type.name",
-      content: recuring => {
-        return recuring.type.name;
-      },
+      path: "typeName",
       sortable: true
     },
     { label: "Value", path: "value", sortable: true },
@@ -38,7 +32,7 @@ class RecuringTable extends Component {
           <button
             className="btn btn-danger btn-sm"
             onClick={() => this.props.onDelete(recuring)}
-            disabled={recuring.currents.length !== 0}
+            disabled={recuring.currentsCount !== "0"}
           >
             <i className="fa fa-trash" />
           </button>

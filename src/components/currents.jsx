@@ -29,8 +29,8 @@ class Currents extends Component {
 
   makeSeriesChart(currents) {
     let expensesByCategories = [];
-    const negatives = currents.filter(c => c.value < 0);
-    negatives.map(
+    const dataSet = currents.filter(c => c.value < 0 && !c.recuring);
+    dataSet.map(
       current =>
         (expensesByCategories[current.category.name] = {
           y: expensesByCategories[current.category.name]

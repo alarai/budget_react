@@ -31,7 +31,7 @@ class HistorizeForm extends Form {
   componentDidMount() {
     const date = new Date();
     const data = {
-      month: date.getMonth(),
+      month: date.getMonth() + 1,
       year: date.getFullYear()
     };
     this.setState({ data });
@@ -50,6 +50,13 @@ class HistorizeForm extends Form {
     return (
       <React.Fragment>
         <h1>Historize current operations</h1>
+        <div className="alert alert-warning" role="alert">
+          Clicking <strong>Save</strong> will remove all existing checked
+          operations in the Currents operation and add them to history for the
+          defined Year and Month on this page.
+          <br />A new operation with the remaining balance will be added to
+          current operation in this operation.
+        </div>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("month", "Month")}
           {this.renderInput("year", "Year")}

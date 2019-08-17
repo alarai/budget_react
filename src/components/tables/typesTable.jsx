@@ -7,7 +7,7 @@ class TypesTable extends CategoriesTable {
     {
       key: "default",
       content: type => {
-        return type.use_for_history && <i className="fa fa-bookmark" />;
+        return type.useForHistory && <i className="fa fa-bookmark" />;
       },
       bodyClass: "smallColumn",
       headerClass: "smallColumn"
@@ -29,9 +29,7 @@ class TypesTable extends CategoriesTable {
             <button
               className="btn btn-danger btn-sm"
               onClick={() => this.props.onDelete(type)}
-              disabled={
-                type.recurings.length !== 0 || type.currents.length !== 0
-              }
+              disabled={type.useCount !== "0"}
             >
               <i className="fa fa-trash" />
             </button>
