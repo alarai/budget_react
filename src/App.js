@@ -74,7 +74,7 @@ class App extends Component {
             <ProtectedRoute path="/currents/:id" component={CurrentsForm} />
             <ProtectedRoute path="/currents" component={Currents} />
             <ProtectedRoute path="/history" component={History} />
-            <ProtectedRoute path="/graphics" component={Graphics} />
+            <ProtectedRoute path="/graphics/:period?" component={Graphics} />
             <ProtectedRoute path="/recurings/:id" component={RecuringForm} />
             <ProtectedRoute path="/recurings" component={Recuring} />
             <ProtectedRoute path="/categories/:id" component={CategoriesForm} />

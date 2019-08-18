@@ -38,28 +38,32 @@ class Graphics extends Component {
     return { chartDataX, chartDataY };
   }
 
-  async makeHistory(year) {
-    const { data: history } = await getHistoryByYear(year);
-    const chartData = this.makeSeriesChart(history);
-    this.setState({
-      history,
-      chartDataX: chartData.chartDataX,
-      chartDataY: chartData.chartDataY
-    });
+  async makeHistory(year, skipCheck = false) {
+    if (skipCheck || this.state.selectedPeriod !== year) {
+      const { data: history } = await getHistoryByYear(year);
+      const chartData = this.makeSeriesChart(history);
+      this.setState({
+        history,
+        chartDataX: chartData.chartDataX,
+        chartDataY: chartData.chartDataY
+      });
+    }
+  }
+
+  updateContent(period) {
+    this.makeHistory(period);
+    this.props.history.push("/graphics/" + period);
   }
 
   doPeriodChange(periodString) {
-    const { periods } = this.state;
     const selectedPeriod = periodString;
     const selectedPeriodIndex = this.getIndexPeriod(selectedPeriod);
     this.setState({
       selectedPeriod,
       selectedPeriodIndex
     });
-    this.makeHistory(
-      periods[selectedPeriodIndex].year,
-      periods[selectedPeriodIndex].month
-    );
+
+    this.updateContent(selectedPeriod);
   }
 
   handlePeriodChange = async ({ currentTarget }) => {
@@ -74,14 +78,25 @@ class Graphics extends Component {
       selectedPeriod: selectedPeriod.year,
       selectedPeriodIndex: selectedPeriodIndex
     });
-    this.makeHistory(selectedPeriod.year);
+    this.updateContent(selectedPeriod.year);
   };
 
   async componentDidMount() {
     const { data: periods } = await getHistoryYears();
     if (periods.length > 0) {
-      this.setState({ periods, selectedPeriod: periods[0].year });
-      await this.makeHistory(periods[0].year);
+      const selectedPeriod = this.props.match.params.period
+        ? this.props.match.params.period
+        : periods[0].year;
+      this.setState({ periods, selectedPeriod });
+      await this.makeHistory(selectedPeriod, true);
+      this.props.history.replace("/graphics/" + selectedPeriod);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.match.params.period !== this.props.match.params.period) {
+      this.setState({ selectedPeriod: this.props.match.params.period });
+      this.makeHistory(this.props.match.params.period);
     }
   }
 
