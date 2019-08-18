@@ -88,15 +88,23 @@ class Graphics extends Component {
         ? this.props.match.params.period
         : periods[0].year;
       this.setState({ periods, selectedPeriod });
-      await this.makeHistory(selectedPeriod, true);
-      this.props.history.replace("/graphics/" + selectedPeriod);
+
+      if (this.props.match.params.period) {
+        await this.makeHistory(selectedPeriod, true);
+      } else {
+        this.props.history.replace("/graphics/" + selectedPeriod);
+      }
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.match.params.period !== this.props.match.params.period) {
-      this.setState({ selectedPeriod: this.props.match.params.period });
-      this.makeHistory(this.props.match.params.period);
+      if (this.props.match.params.period) {
+        this.setState({ selectedPeriod: this.props.match.params.period });
+        this.makeHistory(this.props.match.params.period);
+      } else {
+        this.props.history.replace("/graphics/" + this.state.periods[0].year);
+      }
     }
   }
 
