@@ -2,8 +2,8 @@ import http from "../httpService";
 
 const apiEndpoint = "/history";
 
-export function getHistory(year, month) {
-  return http.get(apiEndpoint + "/" + year + "/" + month);
+export function getHistory(period) {
+  return http.get(apiEndpoint + "/" + period);
 }
 
 export function getHistoryPeriods() {

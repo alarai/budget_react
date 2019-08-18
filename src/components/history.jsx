@@ -54,21 +54,59 @@ class History extends Component {
     return periods;
   };
 
-  async makeHistory(year, month) {
-    const { data: history } = await getHistory(year, month);
-    this.setState({ history, chartData: this.makeSeriesChart(history) });
+  async makeHistory(period, skipCheck = false) {
+    console.log(period, this.state.selectedPeriod);
+    if (skipCheck || this.state.selectedPeriod !== period) {
+      const { data: history } = await getHistory(period);
+      this.setState({ history, chartData: this.makeSeriesChart(history) });
+    }
   }
 
   async componentDidMount() {
     const { data: periodsRaw } = await getHistoryPeriods();
-    const periodItems = this.makePeriodsItems(periodsRaw);
     if (periodsRaw.length > 0) {
+      const periodItems = this.makePeriodsItems(periodsRaw);
+      const selectedPeriod =
+        this.props.match.params.month && this.props.match.params.year
+          ? this.props.match.params.year +
+            "/" +
+            this.props.match.params.month.padStart(2, "0")
+          : periodItems[0].periodString;
       this.setState({
         periods: periodItems,
-        selectedPeriod: periodItems[0].periodString
+        selectedPeriod
       });
-      this.makeHistory(periodItems[0].year, periodItems[0].month);
+      if (this.props.match.params.year && this.props.match.params.month) {
+        await this.makeHistory(selectedPeriod, true);
+      } else {
+        this.props.history.replace("/history/" + selectedPeriod);
+      }
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevProps.match.params.year !== this.props.match.params.year ||
+      prevProps.match.params.month !== this.props.match.params.month
+    ) {
+      if (this.props.match.params.year && this.props.match.params.month) {
+        const selectedPeriod =
+          this.props.match.params.year +
+          "/" +
+          this.props.match.params.month.padStart(2, "0");
+        this.setState({ selectedPeriod });
+        this.makeHistory(selectedPeriod);
+      } else {
+        this.props.history.replace(
+          "/history/" + this.state.periods[0].periodString
+        );
+      }
+    }
+  }
+
+  updateContent(period) {
+    this.makeHistory(period);
+    this.props.history.push("/history/" + period);
   }
 
   handleSort = sortColumn => {
@@ -93,10 +131,7 @@ class History extends Component {
       selectedPeriod,
       selectedPeriodIndex
     });
-    this.makeHistory(
-      periods[selectedPeriodIndex].year,
-      periods[selectedPeriodIndex].month
-    );
+    this.updateContent(periods[selectedPeriodIndex].periodString);
   }
 
   handlePeriodChange = ({ currentTarget }) => {
@@ -108,10 +143,10 @@ class History extends Component {
     const selectedPeriod = this.state.periods[selectedPeriodIndex];
 
     await this.setState({
-      selectedPeriod: selectedPeriod.periodString,
       selectedPeriodIndex: selectedPeriodIndex
     });
-    this.makeHistory(selectedPeriod.year, selectedPeriod.month);
+
+    this.updateContent(selectedPeriod.periodString);
   };
 
   handlePrevPeriod = async () => {
