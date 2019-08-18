@@ -1,25 +1,34 @@
 import React, { Component } from "react";
-import {
-  getHistory,
-  getHistoryPeriods
-} from "./../services/dataSources/historyService";
-
-import HistoryTable from "./tables/historyTable";
 import _ from "lodash";
+import {
+  getHistoryPeriods,
+  getHistory
+} from "./../services/dataSources/historyService";
 import PieChart from "./graphics/pieChart";
 import PeriodSelector from "./periodSelector";
+import HistoryTable from "./tables/historyTable";
 
-class History extends Component {
+class Graphics extends Component {
   state = {
     history: [],
     sortColumn: {
       path: "date",
       order: "desc"
     },
-    chartData: [],
     periods: [],
     selectedPeriod: "",
-    selectedPeriodIndex: 0
+    selectedPeriodIndex: 0,
+    chartData: []
+  };
+
+  getIndexPeriod = periodString => {
+    const { periods } = this.state;
+    for (let i = 0; i < periods.length; i++) {
+      if (periods[i].periodString === periodString) {
+        return i;
+      }
+    }
+    return null;
   };
 
   makeSeriesChart(history) {
@@ -42,99 +51,35 @@ class History extends Component {
     return data;
   }
 
-  makePeriodsItems = periodsRaw => {
-    let periods = [];
-    periodsRaw.map(period =>
-      periods.push({
-        month: period.month,
-        year: period.year,
-        periodString: period.year + "/" + String(period.month).padStart(2, "0")
-      })
-    );
-    return periods;
-  };
-
-  async makeHistory(period, skipCheck = false) {
-    console.log(period, this.state.selectedPeriod);
-    if (skipCheck || this.state.selectedPeriod !== period) {
-      const { data: history } = await getHistory(period);
-      this.setState({ history, chartData: this.makeSeriesChart(history) });
-    }
-  }
-
-  async componentDidMount() {
-    const { data: periodsRaw } = await getHistoryPeriods();
-    if (periodsRaw.length > 0) {
-      const periodItems = this.makePeriodsItems(periodsRaw);
-      const selectedPeriod =
-        this.props.match.params.month && this.props.match.params.year
-          ? this.props.match.params.year +
-            "/" +
-            this.props.match.params.month.padStart(2, "0")
-          : periodItems[0].periodString;
+  async makeHistory(year, month, skipCheck = false) {
+    if (skipCheck || this.state.selectedPeriod !== year) {
+      const { data: history } = await getHistory(year + "/" + month);
+      const chartData = this.makeSeriesChart(history);
       this.setState({
-        periods: periodItems,
-        selectedPeriod
+        history,
+        chartData
       });
-      if (this.props.match.params.year && this.props.match.params.month) {
-        await this.makeHistory(selectedPeriod, true);
-      } else {
-        this.props.history.replace("/history/" + selectedPeriod);
-      }
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.match.params.year !== this.props.match.params.year ||
-      prevProps.match.params.month !== this.props.match.params.month
-    ) {
-      if (this.props.match.params.year && this.props.match.params.month) {
-        const selectedPeriod =
-          this.props.match.params.year +
-          "/" +
-          this.props.match.params.month.padStart(2, "0");
-        this.setState({ selectedPeriod });
-        this.makeHistory(selectedPeriod);
-      } else {
-        this.props.history.replace(
-          "/history/" + this.state.periods[0].periodString
-        );
-      }
     }
   }
 
   updateContent(period) {
-    this.makeHistory(period);
+    const selectedPeriod = this.state.periods[this.state.selectedPeriodIndex];
+    this.makeHistory(selectedPeriod.year, selectedPeriod.month);
     this.props.history.push("/history/" + period);
   }
 
-  handleSort = sortColumn => {
-    this.setState({ sortColumn });
-  };
-
-  getIndexPeriod = periodString => {
-    const { periods } = this.state;
-    for (let i = 0; i < periods.length; i++) {
-      if (periods[i].periodString === periodString) {
-        return i;
-      }
-    }
-    return null;
-  };
-
   doPeriodChange(periodString) {
-    const { periods } = this.state;
     const selectedPeriod = periodString;
     const selectedPeriodIndex = this.getIndexPeriod(selectedPeriod);
     this.setState({
       selectedPeriod,
       selectedPeriodIndex
     });
-    this.updateContent(periods[selectedPeriodIndex].periodString);
+
+    this.updateContent(selectedPeriod);
   }
 
-  handlePeriodChange = ({ currentTarget }) => {
+  handlePeriodChange = async ({ currentTarget }) => {
     this.doPeriodChange(currentTarget.value);
   };
 
@@ -143,18 +88,65 @@ class History extends Component {
     const selectedPeriod = this.state.periods[selectedPeriodIndex];
 
     await this.setState({
+      selectedPeriod: selectedPeriod.periodString,
       selectedPeriodIndex: selectedPeriodIndex
     });
-
     this.updateContent(selectedPeriod.periodString);
   };
 
-  handlePrevPeriod = async () => {
-    this.handlePeriodMove(1);
+  makePeriodsItems = periodsRaw => {
+    let periods = [];
+    periodsRaw.map(period =>
+      periods.push({
+        month: period.month,
+        year: period.year,
+        periodString: period.year + "-" + String(period.month).padStart(2, "0")
+      })
+    );
+    return periods;
   };
 
-  handleNextPeriod = async () => {
-    this.handlePeriodMove(-1);
+  async componentDidMount() {
+    const { data: periodsRaw } = await getHistoryPeriods();
+    if (periodsRaw.length > 0) {
+      const periods = this.makePeriodsItems(periodsRaw);
+      const selectedPeriod = this.props.match.params.period
+        ? this.props.match.params.period
+        : periods[0].periodString;
+      this.setState({ periods, selectedPeriod });
+
+      if (this.props.match.params.period) {
+        await this.makeHistory(periods[0].year, periods[0].month, true);
+      } else {
+        this.props.history.replace("/history/" + selectedPeriod);
+      }
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.match.params.period !== this.props.match.params.period) {
+      if (this.props.match.params.period) {
+        const selectedPeriodIndex = this.getIndexPeriod(
+          this.props.match.params.period
+        );
+        this.setState({
+          selectedPeriod: this.props.match.params.period,
+          selectedPeriodIndex
+        });
+        this.makeHistory(
+          this.state.periods[selectedPeriodIndex].year,
+          this.state.periods[selectedPeriodIndex].month
+        );
+      } else {
+        this.props.history.replace(
+          "/history/" + this.state.periods[0].periodString
+        );
+      }
+    }
+  }
+
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
   };
 
   render() {
@@ -171,7 +163,7 @@ class History extends Component {
       return (
         <React.Fragment>
           <h1>History</h1>
-          <p>No history is yet available!</p>
+          <p>No data is yet available!</p>
         </React.Fragment>
       );
     }
@@ -186,11 +178,7 @@ class History extends Component {
           onSelectChange={this.handlePeriodChange}
           periodValue="periodString"
         />
-        <PieChart
-          chartData={chartData}
-          title="Expenses by Categories"
-          serieName="Sum of expenses"
-        />
+        <PieChart chartData={chartData} title="Expenses by Categories" />
         <div className="row">
           <HistoryTable
             history={sorted}
@@ -203,4 +191,4 @@ class History extends Component {
   }
 }
 
-export default History;
+export default Graphics;

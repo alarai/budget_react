@@ -43,7 +43,6 @@ class Graphics extends Component {
       const { data: history } = await getHistoryByYear(year);
       const chartData = this.makeSeriesChart(history);
       this.setState({
-        history,
         chartDataX: chartData.chartDataX,
         chartDataY: chartData.chartDataY
       });
