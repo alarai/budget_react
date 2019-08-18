@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Table from "./common/table";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 class CategoriesTable extends Component {
   columns = [
@@ -51,5 +52,11 @@ class CategoriesTable extends Component {
     );
   }
 }
+
+CategoriesTable.propTypes = {
+  categories: PropTypes.array.isRequired,
+  sortColumn: PropTypes.object.isRequired,
+  onSort: PropTypes.func.isRequired
+};
 
 export default CategoriesTable;

@@ -14,7 +14,9 @@ class CurrentsForm extends Form {
       date: new Date().toISOString().substring(0, 10),
       name: "",
       value: "",
-      checked: false
+      checked: false,
+      categoryId: "",
+      typeId: ""
     },
     categories: [],
     types: [],

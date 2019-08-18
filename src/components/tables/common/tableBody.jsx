@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import PropTypes from "prop-types";
 
 class TableBody extends Component {
   renderCell = (item, column) => {
@@ -40,5 +41,10 @@ class TableBody extends Component {
     );
   }
 }
+
+TableBody.propTypes = {
+  data: PropTypes.array,
+  columns: PropTypes.array
+};
 
 export default TableBody;

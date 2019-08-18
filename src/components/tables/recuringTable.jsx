@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Table from "./common/table";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 class RecuringTable extends Component {
   columns = [
@@ -57,5 +58,11 @@ class RecuringTable extends Component {
     );
   }
 }
+
+RecuringTable.propTypes = {
+  recurings: PropTypes.array.isRequired,
+  sortColumn: PropTypes.object.isRequired,
+  onSort: PropTypes.func.isRequired
+};
 
 export default RecuringTable;

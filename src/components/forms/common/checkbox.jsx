@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Checkbox = ({ name, label, error, ...rest }) => {
   return (
@@ -18,6 +19,14 @@ const Checkbox = ({ name, label, error, ...rest }) => {
       {error && <div className="alert alert-danger">{error}</div>}
     </div>
   );
+};
+
+Checkbox.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  checked: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default Checkbox;

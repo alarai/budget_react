@@ -1,6 +1,7 @@
 import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import PropTypes from "prop-types";
 
 (function(H) {
   // Pass error messages
@@ -63,6 +64,13 @@ const HistoChart = ({ chartDataX, chartDataY, serieName, title }) => {
   };
 
   return <HighchartsReact highcharts={Highcharts} options={chartsOptions} />;
+};
+
+HistoChart.propTypes = {
+  chartDataX: PropTypes.arrayOf(PropTypes.string).isRequired,
+  chartDataY: PropTypes.arrayOf(PropTypes.number).isRequired,
+  serieName: PropTypes.string,
+  title: PropTypes.string
 };
 
 export default HistoChart;

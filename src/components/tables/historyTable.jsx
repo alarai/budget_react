@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Table from "./common/table";
+import PropTypes from "prop-types";
 
 class HistoryTable extends Component {
   columns = [
@@ -43,5 +44,11 @@ class HistoryTable extends Component {
     );
   }
 }
+
+HistoryTable.propTypes = {
+  history: PropTypes.array.isRequired,
+  sortColumn: PropTypes.object.isRequired,
+  onSort: PropTypes.func.isRequired
+};
 
 export default HistoryTable;

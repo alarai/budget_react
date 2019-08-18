@@ -1,6 +1,7 @@
 import React from "react";
 import auth from "../../services/authService";
 import { Route, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ component: Component, render, ...rest }) => {
   return (
@@ -22,6 +23,11 @@ const ProtectedRoute = ({ component: Component, render, ...rest }) => {
       }}
     />
   );
+};
+
+ProtectedRoute.propTypes = {
+  component: PropTypes.func,
+  render: PropTypes.func
 };
 
 export default ProtectedRoute;

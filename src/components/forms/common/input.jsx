@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const Input = ({ name, label, error, ...rest }) => {
   return (
@@ -8,6 +9,14 @@ const Input = ({ name, label, error, ...rest }) => {
       {error && <div className="alert alert-danger">{error}</div>}
     </div>
   );
+};
+
+Input.propTypes = {
+  name: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default Input;

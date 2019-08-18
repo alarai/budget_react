@@ -1,6 +1,7 @@
 import React from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import PropTypes from "prop-types";
 
 const PieChart = ({ chartData, serieName, title }) => {
   const chartsOptions = {
@@ -44,6 +45,17 @@ const PieChart = ({ chartData, serieName, title }) => {
   };
 
   return <HighchartsReact highcharts={Highcharts} options={chartsOptions} />;
+};
+
+const dataShape = {
+  y: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired
+};
+
+PieChart.propTypes = {
+  chartData: PropTypes.arrayOf(PropTypes.shape(dataShape)).isRequired,
+  serieName: PropTypes.string,
+  title: PropTypes.string
 };
 
 export default PieChart;

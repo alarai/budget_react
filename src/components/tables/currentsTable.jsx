@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Table from "./common/table";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 class CurrentsTable extends Component {
   columns = [
@@ -78,5 +79,11 @@ class CurrentsTable extends Component {
     );
   }
 }
+
+CurrentsTable.propTypes = {
+  currents: PropTypes.array.isRequired,
+  sortColumn: PropTypes.object.isRequired,
+  onSort: PropTypes.func.isRequired
+};
 
 export default CurrentsTable;
