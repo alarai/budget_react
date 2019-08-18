@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const PeriodSelector = ({
   onSelectChange,
@@ -47,6 +48,16 @@ const PeriodSelector = ({
       </div>
     </div>
   );
+};
+
+PeriodSelector.propTypes = {
+  onSelectChange: PropTypes.func.isRequired,
+  onButtonChange: PropTypes.func.isRequired,
+  periods: PropTypes.array.isRequired,
+  selectedPeriod: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    .isRequired,
+  selectedPeriodIndex: PropTypes.number.isRequired,
+  periodValue: PropTypes.string.isRequired
 };
 
 export default PeriodSelector;

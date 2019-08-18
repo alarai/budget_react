@@ -112,7 +112,12 @@ class Graphics extends Component {
           onSelectChange={this.handlePeriodChange}
           periodValue="year"
         />
-        <HistoChart chartDataX={chartDataX} chartDataY={chartDataY} />
+        <HistoChart
+          chartDataX={chartDataX}
+          chartDataY={chartDataY}
+          title={"Monthly balance for " + selectedPeriod}
+          serieName="Balance"
+        />
       </React.Fragment>
     );
   }
