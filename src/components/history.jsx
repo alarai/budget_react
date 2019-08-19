@@ -63,8 +63,6 @@ class Graphics extends Component {
   }
 
   updateContent(period) {
-    const selectedPeriod = this.state.periods[this.state.selectedPeriodIndex];
-    //this.makeHistory(selectedPeriod.year, selectedPeriod.month);
     this.props.history.push("/history/" + period);
   }
 

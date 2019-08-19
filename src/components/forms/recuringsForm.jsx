@@ -94,7 +94,7 @@ class RecuringForm extends Form {
       <React.Fragment>
         <h1>Recuring Form</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Name")}
+          {this.renderInput("name", "Name", true)}
           {this.renderSelect("categoryId", "Category", categories)}
           {this.renderSelect("typeId", "Type", types)}
           {this.renderInput("value", "Value")}

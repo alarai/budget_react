@@ -67,10 +67,11 @@ class Form extends Component {
     );
   }
 
-  renderInput(name, label, type = "text") {
+  renderInput(name, label, autoFocus, type = "text") {
     const { data, errors } = this.state;
     return (
       <Input
+        autoFocus={autoFocus}
         name={name}
         value={data[name]}
         label={label}

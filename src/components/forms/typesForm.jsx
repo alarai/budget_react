@@ -54,7 +54,7 @@ class TypesForm extends Form {
       <React.Fragment>
         <h1>Type Form</h1>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Name")}
+          {this.renderInput("name", "Name", true)}
           {this.renderCheckbox("use_for_history", "Use for History")}
           {this.renderButton("Save")}
         </form>
