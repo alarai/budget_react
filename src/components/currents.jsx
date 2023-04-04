@@ -78,7 +78,8 @@ class Currents extends Component {
 
   async reload() {
     const { data: currents } = await getCurrents();
-    const { data: recurings } = await getUnusedRecurings();
+    let { data: recurings } = await getUnusedRecurings();
+    recurings = recurings.sort((a , b) => a.value - b.value);
 
     this.setState(this.buildUpdate(currents, recurings));
   }
